@@ -11,4 +11,9 @@ class LandingController extends Controller
     {
         return Inertia::render('home');
     }
+
+    public function adminDashboard()
+    {
+        return Inertia::render('admin/dashboard');
+    }
 }

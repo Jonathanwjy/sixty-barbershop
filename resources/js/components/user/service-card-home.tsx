@@ -22,12 +22,12 @@ export default function ServiceCardHome({
     return (
         <motion.div
             // --- 1. ANIMASI SCROLL (Masuk dari bawah) ---
-            initial={{ opacity: 0, y: 50 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-100px' }}
             transition={{ duration: 0.5, delay: index * 0.1 }} // Delay bertingkat jika ada banyak card
             // --- 2. CONTAINER STYLING ---
-            className="group relative flex flex-col overflow-hidden rounded-xl bg-accent text-accent-foreground shadow-primary transition-all duration-300 hover:-translate-y-8 hover:shadow-2xl"
+            className="group relative flex flex-col overflow-hidden shadow-sm rounded-xl bg-accent text-accent-foreground shadow-primary transition-all duration-300 hover:-translate-y-8 hover:shadow-2xl"
         >
             {/* --- 3. GAMBAR DENGAN EFEK ZOOM --- */}
             <div className="relative h-48 w-full overflow-hidden">

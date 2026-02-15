@@ -24,8 +24,8 @@ export default function Login({
 }: Props) {
     return (
         <AuthLayout
-            title="Log in to your account"
-            description="Enter your email and password below to log in"
+            title="Login"
+            description="Silahkan Login untuk melakukan reservasi."
         >
             <Head title="Log in" />
 
@@ -43,11 +43,11 @@ export default function Login({
                                     id="email"
                                     type="email"
                                     name="email"
-                                    required
                                     autoFocus
                                     tabIndex={1}
                                     autoComplete="email"
                                     placeholder="email@example.com"
+                                    className="border border-accent-foreground/50 focus:ring-2 focus:ring-primary focus:ring-offset-1 focus:ring-offset-secondary-foreground"
                                 />
                                 <InputError message={errors.email} />
                             </div>
@@ -69,10 +69,10 @@ export default function Login({
                                     id="password"
                                     type="password"
                                     name="password"
-                                    required
                                     tabIndex={2}
                                     autoComplete="current-password"
                                     placeholder="Password"
+                                    className="border border-accent-foreground/50 focus:ring-2 focus:ring-primary focus:ring-offset-1 focus:ring-offset-secondary-foreground"
                                 />
                                 <InputError message={errors.password} />
                             </div>

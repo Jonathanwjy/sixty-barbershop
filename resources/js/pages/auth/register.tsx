@@ -12,8 +12,8 @@ import { store } from '@/routes/register';
 export default function Register() {
     return (
         <AuthLayout
-            title="Create an account"
-            description="Enter your details below to create your account"
+            title="Buat akun"
+            description="Masukkan nama, email dan password untuk membuat akun baru."
         >
             <Head title="Register" />
             <Form
@@ -30,12 +30,12 @@ export default function Register() {
                                 <Input
                                     id="name"
                                     type="text"
-                                    required
                                     autoFocus
                                     tabIndex={1}
                                     autoComplete="name"
                                     name="name"
                                     placeholder="Full name"
+                                    className="border border-accent-foreground/50 focus:ring-2 focus:ring-primary focus:ring-offset-1 focus:ring-offset-secondary-foreground"
                                 />
                                 <InputError
                                     message={errors.name}
@@ -48,11 +48,11 @@ export default function Register() {
                                 <Input
                                     id="email"
                                     type="email"
-                                    required
                                     tabIndex={2}
                                     autoComplete="email"
                                     name="email"
                                     placeholder="email@example.com"
+                                    className="border border-accent-foreground/50 focus:ring-2 focus:ring-primary focus:ring-offset-1 focus:ring-offset-secondary-foreground"
                                 />
                                 <InputError message={errors.email} />
                             </div>
@@ -62,11 +62,11 @@ export default function Register() {
                                 <Input
                                     id="password"
                                     type="password"
-                                    required
                                     tabIndex={3}
                                     autoComplete="new-password"
                                     name="password"
                                     placeholder="Password"
+                                    className="border border-accent-foreground/50 focus:ring-2 focus:ring-primary focus:ring-offset-1 focus:ring-offset-secondary-foreground"
                                 />
                                 <InputError message={errors.password} />
                             </div>
@@ -78,11 +78,11 @@ export default function Register() {
                                 <Input
                                     id="password_confirmation"
                                     type="password"
-                                    required
                                     tabIndex={4}
                                     autoComplete="new-password"
                                     name="password_confirmation"
                                     placeholder="Confirm password"
+                                    className="border border-accent-foreground/50 focus:ring-2 focus:ring-primary focus:ring-offset-1 focus:ring-offset-secondary-foreground"
                                 />
                                 <InputError
                                     message={errors.password_confirmation}

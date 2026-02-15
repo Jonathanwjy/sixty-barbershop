@@ -9,6 +9,7 @@ import {
     SheetTitle,
     SheetTrigger,
 } from '@/components/ui/sheet'; // Import komponen Sheet
+import Logout from '@/components/ui/logout';
 
 export default function Navbar() {
     // Mengambil data user dari global props
@@ -54,14 +55,17 @@ export default function Navbar() {
                     {/* Auth Buttons Desktop */}
                     <div className="ml-4 flex items-center gap-4">
                         {auth.user ? (
-                            <Link href="/booking">
-                                <Button
-                                    size="default"
-                                    className="font-semibold"
-                                >
-                                    Book Now
-                                </Button>
-                            </Link>
+                            <>
+                                <Link href="/booking">
+                                    <Button
+                                        size="default"
+                                        className="font-semibold"
+                                    >
+                                        Book Now
+                                    </Button>
+                                </Link>
+                                <Logout />
+                            </>
                         ) : (
                             <div className="flex items-center gap-2">
                                 <Link href="/login">

@@ -134,7 +134,7 @@ export default function Home() {
                     <div className="absolute inset-0 bg-black/70"></div>
 
                     {/* Container ini yang membuat konten ada di tengah */}
-                    <div className="relative z-10 container mx-auto px-4">
+                    <div className="relative z-10 container mx-auto px-24">
                         {' '}
                         {/* Tambah px-4 di sini untuk safety margin di HP */}
                         <h1 className="mb-4 text-center text-4xl font-bold text-primary underline">

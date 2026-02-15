@@ -18,7 +18,7 @@ createInertiaApp({
         const root = createRoot(el);
 
         el.classList.add(
-            'bg-secondary-foreground',
+            'bg-background',
             'min-h-screen',
             'font-mono',
             'text-primary',
