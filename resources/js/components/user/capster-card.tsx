@@ -3,12 +3,12 @@ import { motion } from 'framer-motion';
 export default function CapsterCard({
     name,
     photo,
-    price_range,
+
     description,
 }: {
     name: string;
     photo: string;
-    price_range: string;
+
     description: string;
 }) {
     return (
@@ -21,16 +21,13 @@ export default function CapsterCard({
             }}
         >
             <img
-                src={photo}
+                src={`/storage/${photo}`}
                 alt={`${name}'s photo`}
-                className="mr-4 mb-4 w-1/2 object-cover p-2"
+                className="mr-4 mb-4 aspect-square w-[64px] object-cover object-center"
             />
             <div>
                 <h2 className="mb-2 text-2xl font-bold">{name}</h2>
                 <p className="mb-4">{description}</p>
-                <p className="text-lg font-semibold text-primary">
-                    {price_range}
-                </p>
             </div>
         </motion.div>
     );

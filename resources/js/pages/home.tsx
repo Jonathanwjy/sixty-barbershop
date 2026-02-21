@@ -5,7 +5,15 @@ import ServiceCardHome from '@/components/user/service-card-home';
 import AppLayout from '@/layouts/app-layout';
 import { motion } from 'framer-motion';
 
-export default function Home() {
+interface Capster {
+    id: number;
+    name: string;
+    nickname: string;
+    description: string;
+    photo: string;
+}
+
+export default function Home({ capsters = [] }: { capsters: Capster[] }) {
     const services = [
         {
             title: 'Fresh Cut',
@@ -27,30 +35,6 @@ export default function Home() {
             price: 'Rp 50.000,00',
             description:
                 'Experience a smooth and refreshing shave with our skilled barbers.',
-        },
-    ];
-
-    const capsters = [
-        {
-            name: 'John Doe',
-            photo: '/images/capster/capster.jpg',
-            price_range: 'Start from Rp 40.000,00',
-            description:
-                'John is a seasoned barber with over 10 years of experience in the industry.',
-        },
-        {
-            name: 'Jane Smith',
-            photo: '/images/capster/capster.jpg',
-            price_range: 'Start from Rp 40.000,00',
-            socials: [
-                {
-                    platform: 'Instagram',
-                    url: 'https://instagram.com/janesmith',
-                },
-                { platform: 'Twitter', url: 'https://twitter.com/janesmith' },
-            ],
-            description:
-                'Jane specializes in modern cuts and styles, bringing creativity to every client.',
         },
     ];
 
@@ -146,13 +130,12 @@ export default function Home() {
                         </p>
                         {/* Grid Container */}
                         {/* Hapus padding horizontal besar di sini, biarkan container yang handle */}
-                        <div className="grid justify-center gap-6 md:grid-cols-2 md:gap-18">
+                        <div className="grid justify-center gap-6 md:grid-cols-2 md:gap-12">
                             {capsters.map((capster, index) => (
                                 <CapsterCard
                                     key={index}
                                     name={capster.name}
                                     photo={capster.photo}
-                                    price_range={capster.price_range}
                                     description={capster.description}
                                 />
                             ))}

@@ -8,6 +8,7 @@ interface Capster {
     description: string;
     nickname: string;
     status: string;
+    photo: string;
 }
 
 export default function CapsterIndex({
@@ -64,6 +65,9 @@ export default function CapsterIndex({
                                     <th className="border-b px-4 py-3 font-medium">
                                         Nickname
                                     </th>
+                                    <th className="border-b px-4 py-3 font-medium">
+                                        Foto
+                                    </th>
 
                                     <th className="border-b px-4 py-3 text-center font-medium">
                                         Aksi
@@ -83,8 +87,16 @@ export default function CapsterIndex({
                                             <td className="px-4 py-3 font-medium text-muted-foreground">
                                                 {capster.name}
                                             </td>
+
                                             <td className="px-4 py-3 text-muted-foreground">
                                                 {capster.nickname}
+                                            </td>
+                                            <td>
+                                                <img
+                                                    src={`/storage/${capster.photo}`}
+                                                    alt={capster.name}
+                                                    className="h-10 w-10 rounded-full object-cover"
+                                                />
                                             </td>
 
                                             {/* Ini sudah benar text-center, sekarang sejajar dengan headernya */}

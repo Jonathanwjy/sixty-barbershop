@@ -7,7 +7,6 @@ import { useCurrentUrl } from '@/hooks/use-current-url';
 import { cn, toUrl } from '@/lib/utils';
 import { edit as editAppearance } from '@/routes/appearance';
 import { edit } from '@/routes/profile';
-import { show } from '@/routes/two-factor';
 import { edit as editPassword } from '@/routes/user-password';
 import type { NavItem } from '@/types';
 
@@ -22,11 +21,7 @@ const sidebarNavItems: NavItem[] = [
         href: editPassword(),
         icon: null,
     },
-    {
-        title: 'Two-Factor Auth',
-        href: show(),
-        icon: null,
-    },
+
     {
         title: 'Appearance',
         href: editAppearance(),
@@ -73,6 +68,13 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
                                 </Link>
                             </Button>
                         ))}
+
+                        <Link
+                            href={'/admin/dashboard'}
+                            className="mt-10 w-full justify-start px-3 text-sm hover:underline"
+                        >
+                            Back to Dashboard
+                        </Link>
                     </nav>
                 </aside>
 

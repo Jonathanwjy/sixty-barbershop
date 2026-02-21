@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('services', function (Blueprint $table) {
-            $table->enum('status', ['active', 'inactive'])->default('active');
+        Schema::table('capsters', function (Blueprint $table) {
+            $table->string('photo')->nullable();
         });
     }
 
@@ -21,7 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('services', function (Blueprint $table) {
+        Schema::table('capsters', function (Blueprint $table) {
             //
         });
     }

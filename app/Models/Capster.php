@@ -10,7 +10,8 @@ class Capster extends Model
         'name',
         'nickname',
         'description',
-        'status'
+        'status',
+        'photo'
     ];
 
     public function pricing()
