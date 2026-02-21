@@ -1,4 +1,11 @@
-import { Link } from '@inertiajs/react';
+import { Link, router } from '@inertiajs/react';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import AppSidebarLayout from '@/layouts/app/app-sidebar-layout';
 
 interface Pricing {
@@ -17,11 +24,44 @@ interface Pricing {
     };
 }
 
+interface DropdownOption {
+    id: number;
+    name: string;
+}
+
+interface PricingIndexProps {
+    pricings: Pricing[];
+    services: DropdownOption[];
+    capsters: DropdownOption[];
+    filters: {
+        service_id: string;
+        capster_id: string;
+    };
+}
+
 export default function PricingIndex({
     pricings = [],
-}: {
-    pricings: Pricing[];
-}) {
+    services = [],
+    capsters = [],
+    filters,
+}: PricingIndexProps) {
+    const handleFilterChange = (
+        key: 'service_id' | 'capster_id',
+        value: string,
+    ) => {
+        router.get(
+            '/admin/pricings/index', // <-- HAPUS /index DI SINI
+            {
+                ...filters,
+                [key]: value, // Kirim apa adanya, biar Laravel yang filter kata "all"-nya
+            },
+            {
+                preserveState: true,
+                preserveScroll: true,
+                replace: true,
+            },
+        );
+    };
     return (
         <>
             <AppSidebarLayout>
@@ -31,6 +71,54 @@ export default function PricingIndex({
                         <h1 className="text-2xl font-bold">
                             Pricing Management
                         </h1>
+                        <Select
+                            value={filters?.service_id || 'all'}
+                            onValueChange={(val) =>
+                                handleFilterChange('service_id', val)
+                            }
+                        >
+                            <SelectTrigger className="w-1/4 text-black dark:text-white">
+                                <SelectValue placeholder="Filter Service" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">
+                                    Semua Service
+                                </SelectItem>
+                                {services.map((service) => (
+                                    <SelectItem
+                                        key={service.id}
+                                        value={String(service.id)}
+                                    >
+                                        {service.name}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+
+                        {/* 2. FILTER CAPSTER */}
+                        <Select
+                            value={filters?.capster_id || 'all'}
+                            onValueChange={(val) =>
+                                handleFilterChange('capster_id', val)
+                            }
+                        >
+                            <SelectTrigger className="w-1/4 text-black dark:text-white">
+                                <SelectValue placeholder="Filter Capster" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">
+                                    Semua Capster
+                                </SelectItem>
+                                {capsters.map((capster) => (
+                                    <SelectItem
+                                        key={capster.id}
+                                        value={String(capster.id)}
+                                    >
+                                        {capster.name}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
                         <Link
                             href="/admin/pricings/create"
                             className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"

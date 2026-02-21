@@ -11,11 +11,34 @@ use Inertia\Inertia;
 
 class PricingController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $pricings = Pricing::with(['service', 'capster'])->latest()->get();
+        // 1. Tangkap request filter
+        $serviceId = $request->input('service_id');
+        $capsterId = $request->input('capster_id');
+
+        // 2. Query Pricing dengan filter
+        $pricings = Pricing::with(['service', 'capster'])
+            ->when($serviceId && $serviceId !== 'all', function ($query) use ($serviceId) {
+                // Hanya filter jika $serviceId ada nilainya DAN bukan teks 'all'
+                $query->where('service_id', $serviceId);
+            })
+            ->when($capsterId && $capsterId !== 'all', function ($query) use ($capsterId) {
+                // Hanya filter jika $capsterId ada nilainya DAN bukan teks 'all'
+                $query->where('capster_id', $capsterId);
+            })
+            ->latest()
+            ->get();
+
+        // 3. Kirim data ke React
         return Inertia::render('admin/pricing/index', [
             'pricings' => $pricings,
+            'services' => Service::all(), // Untuk opsi Dropdown Service
+            'capsters' => Capster::all(), // Untuk opsi Dropdown Capster
+            'filters' => [
+                'service_id' => $serviceId ?? 'all',
+                'capster_id' => $capsterId ?? 'all',
+            ]
         ]);
     }
 
