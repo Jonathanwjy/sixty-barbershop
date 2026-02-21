@@ -1,15 +1,14 @@
 import AppSidebarLayout from '@/layouts/app/app-sidebar-layout';
-import ServiceForm from './components/service-form';
+import CapsterForm from './components/capster-form';
 
-// Props 'service' ini dikirim dari Laravel Controller: return Inertia::render('Edit', ['service' => $service]);
-export default function Edit({ service }: { service: any }) {
+export default function Edit({ capster }: { capster: any }) {
     return (
         <AppSidebarLayout>
             <div className="w-full p-4">
                 <h1 className="mb-4 text-2xl font-bold">Edit Service</h1>
 
                 {/* Panggil form DENGAN props service (Mode Edit) */}
-                <ServiceForm service={service} />
+                <CapsterForm capster={capster} />
             </div>
         </AppSidebarLayout>
     );

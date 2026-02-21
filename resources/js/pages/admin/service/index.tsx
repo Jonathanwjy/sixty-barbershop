@@ -1,64 +1,137 @@
-import { Link, usePage } from '@inertiajs/react';
-
+import { Link, router } from '@inertiajs/react';
+import { useState, useEffect } from 'react';
+import SearchBar from '@/components/search-bar';
 import AppSidebarLayout from '@/layouts/app/app-sidebar-layout';
-import services from '@/routes/services';
 
 interface Service {
     id: number;
     name: string;
     description: string;
     duration: number;
+    status: string;
 }
 
-export default function ServiceIndex() {
-    const { services } = usePage().props as { services: Service[] };
+export default function ServiceIndex({
+    services = [],
+    filters,
+}: {
+    services: Service[];
+    filters: { search: string };
+}) {
+    const handleToggleStatus = (id: number) => {
+        router.patch(
+            `/admin/services/toggle-status/${id}`,
+            {},
+            {
+                preserveScroll: true, // Agar halaman tidak loncat ke atas saat diklik
+            },
+        );
+    };
     return (
         <AppSidebarLayout>
-            <div className="p-4">
-                <h1 className="text-2xl font-bold">Service Management</h1>
-            </div>
-            <Link
-                href="/admin/services/create"
-                className="md:text-md mb-4 ml-4 w-32 rounded-md bg-primary p-1 text-center text-sm text-primary-foreground transition-colors hover:bg-primary-foreground hover:text-primary"
-            >
-                Add Service
-            </Link>
+            <div className="flex flex-col gap-6 p-6">
+                {/* Header Section */}
+                <div className="flex items-center justify-between">
+                    <h1 className="text-2xl font-bold">Service Management</h1>
 
-            <div className="mb-1 flex px-8">
-                <div className="flex w-screen justify-between rounded-md border border-primary p-2">
-                    <div className="flex gap-8">
-                        <p className="border-r border-primary pr-2">No</p>
-                        <p>Nama</p>
-                        <p>Durasi</p>
-                    </div>
-
-                    <div>action</div>
+                    <SearchBar
+                        routeUrl="/admin/services/index"
+                        initialSearch={filters?.search}
+                        placeholder="Cari nama service"
+                    />
+                    <Link
+                        href="/admin/services/create"
+                        className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+                    >
+                        + Add Service
+                    </Link>
                 </div>
-            </div>
 
-            <div>
-                {services.map((service, index) => (
-                    <div key={service.id} className="mb-1 flex px-8">
-                        <div className="flex w-screen justify-between rounded-md border border-primary p-2">
-                            <div className="flex gap-8">
-                                <p className="border-r border-primary pr-2">
-                                    {index + 1}
-                                </p>
-                                <p>{service.name}</p>
-                                <p>{service.duration} minutes</p>
-                            </div>
-
-                            <div>
-                                {' '}
-                                <Link
-                                    href={`/admin/services/edit/${service.id}`}
-                                >
-                                    Edit
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
-                ))}
+                {/* Table Section */}
+                <div className="w-full overflow-hidden rounded-md border border-border bg-background shadow-sm">
+                    <table className="w-full text-left text-sm">
+                        <thead className="bg-muted text-muted-foreground">
+                            <tr>
+                                <th className="border-b px-4 py-3 font-medium">
+                                    No
+                                </th>
+                                <th className="border-b px-4 py-3 font-medium">
+                                    Nama Service
+                                </th>
+                                <th className="border-b px-4 py-3 font-medium">
+                                    Deskripsi
+                                </th>
+                                <th className="border-b px-4 py-3 font-medium">
+                                    Durasi
+                                </th>
+                                <th className="border-b px-4 py-3 text-center font-medium">
+                                    Aksi
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {/* 2. Map data services ke dalam baris tabel */}
+                            {services.length > 0 ? (
+                                services.map((service, index) => (
+                                    <tr
+                                        key={service.id}
+                                        className="border-b transition-colors last:border-0 hover:bg-muted/50"
+                                    >
+                                        <td className="px-4 py-3 text-muted-foreground">
+                                            {index + 1}
+                                        </td>
+                                        <td className="px-4 py-3 font-medium text-muted-foreground">
+                                            {service.name}
+                                        </td>
+                                        <td className="max-w-xs truncate px-4 py-3 text-muted-foreground">
+                                            {service.description}
+                                        </td>
+                                        <td className="px-4 py-3 text-muted-foreground">
+                                            {service.duration} Menit
+                                        </td>
+                                        <td className="px-4 py-3 text-center">
+                                            <button
+                                                onClick={() =>
+                                                    handleToggleStatus(
+                                                        service.id,
+                                                    )
+                                                }
+                                                className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
+                                                    service.status === 'active'
+                                                        ? 'bg-green-100 text-green-700 hover:bg-green-200'
+                                                        : 'bg-red-100 text-red-700 hover:bg-red-200'
+                                                }`}
+                                            >
+                                                {service.status === 'active'
+                                                    ? 'Active'
+                                                    : 'Inactive'}
+                                            </button>
+                                            <Link
+                                                href={`/admin/services/edit/${service.id}`}
+                                                className="ml-2 font-medium text-blue-600 hover:text-blue-800 hover:underline"
+                                            >
+                                                Edit
+                                            </Link>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                /* Jika data kosong */
+                                <tr>
+                                    <td
+                                        colSpan={5} // <-- Sesuaikan dengan jumlah kolom (No, Nama, Deskripsi, Durasi, Aksi = 5)
+                                        className="px-4 py-8 text-center text-muted-foreground"
+                                    >
+                                        {/* Ubah pesan kosong karena searchTerm sudah tidak ada di scope ini */}
+                                        {filters?.search
+                                            ? `Service dengan nama "${filters.search}" tidak ditemukan.`
+                                            : 'Belum ada data service yang ditambahkan.'}
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </AppSidebarLayout>
     );

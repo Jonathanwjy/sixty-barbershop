@@ -34,12 +34,12 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Capster',
-        href: '#',
+        href: '/admin/capsters/index',
         icon: Folder,
     },
     {
         title: 'Pricing',
-        href: '#',
+        href: '/admin/pricings/index',
         icon: Folder,
     },
 ];

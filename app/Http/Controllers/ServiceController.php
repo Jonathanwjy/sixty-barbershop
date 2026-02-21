@@ -13,11 +13,23 @@ class ServiceController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
 
+        $search = $request->input('search');
+
+        $services = Service::query()
+            ->when($search, function ($query, $search) {
+                $query->where('name', 'like', "%{$search}%");
+            })
+
+            ->get();
+
         return Inertia::render('admin/service/index', [
-            'services' => Service::all(),
+            'services' => $services,
+            'filters' => [
+                'search' => $search
+            ]
         ]);
     }
 
@@ -93,5 +105,18 @@ class ServiceController extends Controller
     public function destroy(Service $service)
     {
         //
+    }
+
+    public function toggleStatus(Service $service)
+    {
+        // Jika status saat ini 'active', ubah jadi 'inactive', dan sebaliknya
+        $newStatus = $service->status === 'active' ? 'inactive' : 'active';
+
+        $service->update([
+            'status' => $newStatus
+        ]);
+
+        // Kembalikan ke halaman index tanpa reload penuh
+        return back();
     }
 }

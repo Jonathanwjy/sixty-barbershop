@@ -7,34 +7,34 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 // Definisikan tipe data Service
-interface Service {
+interface Capster {
     id: number;
     name: string;
+    nickname: string;
     description: string;
-    duration: string | number;
 }
 
-interface ServiceFormProps {
-    service?: Service; // Optional: Jika ada berarti Edit, jika null berarti Create
+interface CapsterFormProps {
+    capster?: Capster;
 }
 
-export default function ServiceForm({ service }: ServiceFormProps) {
-    const isEdit = !!service;
+export default function CapsterForm({ capster }: CapsterFormProps) {
+    const isEdit = !!capster;
 
     const { data, setData, post, put, processing, errors } = useForm({
-        name: service?.name ?? '',
-        description: service?.description ?? '',
-        duration: service?.duration ?? '',
+        name: capster?.name ?? '',
+        description: capster?.description ?? '',
+        nickname: capster?.nickname ?? '',
     });
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
 
         if (isEdit) {
-            put(`/admin/services/update/${service.id}`);
+            put(`/admin/capsters/update/${capster.id}`);
         } else {
             // Mode Create: Gunakan POST ke URL store
-            post('/admin/services/store');
+            post('/admin/capsters/store');
         }
     };
 
@@ -46,7 +46,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
                 <Input
                     id="name"
                     type="text"
-                    placeholder="Service Name"
+                    placeholder="Capster Name"
                     value={data.name}
                     onChange={(e) => setData('name', e.target.value)}
                     className="mt-1 text-muted-foreground"
@@ -60,7 +60,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
                 <Input
                     id="description"
                     type="text"
-                    placeholder="Service Description"
+                    placeholder="Capster Description"
                     value={data.description}
                     onChange={(e) => setData('description', e.target.value)}
                     className="mt-1 text-muted-foreground"
@@ -70,16 +70,16 @@ export default function ServiceForm({ service }: ServiceFormProps) {
 
             {/* DURATION INPUT */}
             <div className="mb-4">
-                <Label htmlFor="duration">Duration</Label>
+                <Label htmlFor="duration">Nickname</Label>
                 <Input
                     id="duration"
-                    type="number"
-                    placeholder="Duration in minutes"
-                    value={data.duration}
-                    onChange={(e) => setData('duration', e.target.value)}
+                    type="text"
+                    placeholder="Nickname"
+                    value={data.nickname}
+                    onChange={(e) => setData('nickname', e.target.value)}
                     className="mt-1 text-muted-foreground"
                 />
-                <InputError message={errors.duration} className="mt-2" />
+                <InputError message={errors.nickname} className="mt-2" />
             </div>
 
             {/* BUTTON */}
@@ -87,8 +87,8 @@ export default function ServiceForm({ service }: ServiceFormProps) {
                 {processing
                     ? 'Saving...'
                     : isEdit
-                      ? 'Update Service'
-                      : 'Create Service'}
+                      ? 'Update Capster'
+                      : 'Create Capster'}
             </Button>
         </form>
     );
