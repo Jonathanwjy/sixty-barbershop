@@ -13,31 +13,22 @@ interface Capster {
     photo: string;
 }
 
-export default function Home({ capsters = [] }: { capsters: Capster[] }) {
-    const services = [
-        {
-            title: 'Fresh Cut',
-            duration: '20 min',
-            price: 'Rp 40.000,00',
-            description:
-                'Get a stylish and modern haircut from our expert barbers.',
-        },
-        {
-            title: 'Beard Trim',
-            duration: '15 min',
-            price: 'Rp 25.000,00',
-            description:
-                'Maintain a sharp and clean look with our professional beard trimming service.',
-        },
-        {
-            title: 'Shave',
-            duration: '30 min',
-            price: 'Rp 50.000,00',
-            description:
-                'Experience a smooth and refreshing shave with our skilled barbers.',
-        },
-    ];
+interface Service {
+    id: number;
+    name: string;
+    description: string;
+    duration: number;
+    min_price: number;
+    photo: string;
+}
 
+export default function Home({
+    capsters = [],
+    services = [],
+}: {
+    capsters: Capster[];
+    services: Service[];
+}) {
     return (
         <>
             <AppLayout>
@@ -81,9 +72,10 @@ export default function Home({ capsters = [] }: { capsters: Capster[] }) {
                         {services.map((service, index) => (
                             <ServiceCardHome
                                 key={index}
-                                title={service.title}
+                                name={service.name}
                                 duration={service.duration}
-                                price={service.price}
+                                min_price={service.min_price}
+                                photo={service.photo}
                                 description={service.description}
                             />
                         ))}

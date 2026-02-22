@@ -23,11 +23,11 @@ export default function CapsterCard({
             <img
                 src={`/storage/${photo}`}
                 alt={`${name}'s photo`}
-                className="mr-4 mb-4 aspect-square w-[64px] object-cover object-center"
+                className="mr-4 mb-4 aspect-square w-[128px] object-cover object-center md:w-[350px]"
             />
             <div>
                 <h2 className="mb-2 text-2xl font-bold">{name}</h2>
-                <p className="mb-4">{description}</p>
+                <p className="mb-4 text-sm md:text-lg">{description}</p>
             </div>
         </motion.div>
     );

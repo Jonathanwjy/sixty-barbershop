@@ -3,20 +3,21 @@ import { Clock } from 'lucide-react'; // Opsional: Icon untuk durasi
 import { Button } from '@/components/ui/button'; // Pastikan path sesuai
 
 interface ServiceCardProps {
-    title?: string;
-    duration?: string;
-    price?: string;
+    name?: string;
+    duration?: number;
+    price?: number;
+    min_price?: number;
     description?: string;
-    image?: string; // Menambahkan prop image agar dinamis
+    photo?: string; // Menambahkan prop photo agar dinamis
     index?: number; // Untuk efek delay berurutan (stagger)
 }
 
 export default function ServiceCardHome({
-    title,
+    name,
     duration,
-    price,
+    min_price,
     description,
-    image,
+    photo,
     index = 0,
 }: ServiceCardProps) {
     return (
@@ -27,13 +28,13 @@ export default function ServiceCardHome({
             viewport={{ once: true, margin: '-100px' }}
             transition={{ duration: 0.5, delay: index * 0.1 }} // Delay bertingkat jika ada banyak card
             // --- 2. CONTAINER STYLING ---
-            className="group relative flex flex-col overflow-hidden shadow-sm rounded-xl bg-accent text-accent-foreground shadow-primary transition-all duration-300 hover:-translate-y-8 hover:shadow-2xl"
+            className="group relative flex flex-col overflow-hidden rounded-xl bg-accent text-accent-foreground shadow-sm shadow-primary transition-all duration-300 hover:-translate-y-8 hover:shadow-2xl"
         >
             {/* --- 3. GAMBAR DENGAN EFEK ZOOM --- */}
             <div className="relative h-48 w-full overflow-hidden">
                 <img
-                    src={image || '/images/hero/banner-1.jpg'}
-                    alt={title || 'Service Image'}
+                    src={photo || '/images/hero/banner-1.jpg'}
+                    alt={name || 'Service Image'}
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
 
@@ -46,17 +47,19 @@ export default function ServiceCardHome({
                 <div className="mb-4 flex items-start justify-between">
                     <div>
                         <h3 className="text-xl font-bold tracking-tight text-primary-foreground">
-                            {title || 'Fresh Cut'}
+                            {name || 'Fresh Cut'}
                         </h3>
                         <div className="mt-1 flex items-center gap-1 text-xs font-medium text-primary-foreground">
-                            {price || 'Rp 40.000'}
+                            {min_price
+                                ? `Mulai dari Rp ${min_price.toLocaleString('id-ID')}`
+                                : 'Rp 40.000'}
                         </div>
                     </div>
                     {/* Harga dengan Badge Style */}
 
                     <div className="rounded-full px-3 py-1 text-sm font-bold text-accent-foreground">
                         <Clock className="h-3 w-3" />
-                        <span>{duration || '20 min'}</span>
+                        <span>{duration || '20 min'} menit</span>
                     </div>
                 </div>
 
