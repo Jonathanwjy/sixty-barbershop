@@ -11,7 +11,8 @@ interface Service {
     id: number;
     name: string;
     description: string;
-    duration: string | number;
+    duration: number;
+    photo: string | null;
 }
 
 interface ServiceFormProps {
@@ -21,17 +22,19 @@ interface ServiceFormProps {
 export default function ServiceForm({ service }: ServiceFormProps) {
     const isEdit = !!service;
 
-    const { data, setData, post, put, processing, errors } = useForm({
+    const { data, setData, post, processing, errors } = useForm({
         name: service?.name ?? '',
         description: service?.description ?? '',
         duration: service?.duration ?? '',
+        photo: null as File | null,
+        _method: isEdit ? 'PUT' : 'POST',
     });
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
 
         if (isEdit) {
-            put(`/admin/services/update/${service.id}`);
+            post(`/admin/services/update/${service.id}`);
         } else {
             // Mode Create: Gunakan POST ke URL store
             post('/admin/services/store');
@@ -54,6 +57,23 @@ export default function ServiceForm({ service }: ServiceFormProps) {
                 <InputError message={errors.name} className="mt-2" />
             </div>
 
+            <div className="mb-4">
+                <Label htmlFor="name">Photo</Label>
+                <Input
+                    id="photo"
+                    type="file"
+                    accept="image/*" // Hanya izinkan file gambar
+                    onChange={(e) => {
+                        // Ambil file pertama yang dipilih user
+                        setData(
+                            'photo',
+                            e.target.files ? e.target.files[0] : null,
+                        );
+                    }}
+                    className="mt-1 text-muted-foreground file:text-muted-foreground"
+                />
+                <InputError message={errors.photo} className="mt-2" />
+            </div>
             {/* DESCRIPTION INPUT */}
             <div className="mb-4">
                 <Label htmlFor="description">Description</Label>

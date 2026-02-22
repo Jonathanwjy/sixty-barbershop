@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { Clock } from 'lucide-react'; // Opsional: Icon untuk durasi
 import { Button } from '@/components/ui/button'; // Pastikan path sesuai
+import service from '@/routes/admin/service';
 
 interface ServiceCardProps {
     name?: string;
@@ -33,7 +34,11 @@ export default function ServiceCardHome({
             {/* --- 3. GAMBAR DENGAN EFEK ZOOM --- */}
             <div className="relative h-48 w-full overflow-hidden">
                 <img
-                    src={photo || '/images/hero/banner-1.jpg'}
+                    src={
+                        photo
+                            ? `/storage/${photo}`
+                            : '/images/hero/banner-1.jpg'
+                    }
                     alt={name || 'Service Image'}
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />

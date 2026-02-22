@@ -58,7 +58,7 @@ export default function CapsterForm({ capster }: CapsterFormProps) {
                             e.target.files ? e.target.files[0] : null,
                         );
                     }}
-                    className="mt-1 text-primary-foreground file:text-primary-foreground"
+                    className="mt-1 text-muted-foreground file:text-muted-foreground"
                 />
                 <InputError message={errors.photo} className="mt-2" />
 

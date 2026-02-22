@@ -11,6 +11,7 @@ class Service extends Model
         'duration',
         'description',
         'status',
+        'photo'
     ];
 
     public function pricing()

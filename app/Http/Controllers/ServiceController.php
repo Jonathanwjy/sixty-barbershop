@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rules\In;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Storage;
 
 class ServiceController extends Controller
 {
@@ -47,16 +47,21 @@ class ServiceController extends Controller
     public function store(Request $request)
     {
         Validator::make($request->all(), [
-            'name' => ['required', 'string', 'max:100'],
-            'duration' => ['required', 'integer', 'min:1'],
-            'description' => ['required', 'string'],
+            'name' => 'required|string|max:100',
+            'duration' => 'required|integer|min:1',
+            'description' => 'required|string',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ])->validate();
 
-        Service::create([
+        $data = [
             'name' => $request->name,
             'duration' => $request->duration,
             'description' => $request->description,
-        ]);
+        ];
+        if ($request->hasFile('photo')) {
+            $data['photo'] = $request->file('photo')->store('service', 'public');
+        }
+        Service::create($data);
 
         return to_route('services.index');
     }
@@ -85,16 +90,30 @@ class ServiceController extends Controller
     public function update(Request $request, Service $service)
     {
         Validator::make($request->all(), [
-            'name' => ['required', 'string', 'max:100'],
-            'duration' => ['required', 'integer', 'min:1'],
-            'description' => ['required', 'string'],
+            'name' => 'required|string|max:100',
+            'duration' => 'required|integer|min:1',
+            'description' => 'required|string',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ])->validate();
 
-        $service->update([
+        $data = [
             'name' => $request->name,
             'duration' => $request->duration,
             'description' => $request->description,
-        ]);
+        ];
+
+        if ($request->hasFile('photo')) {
+            // 1. Hapus foto lama dari penyimpanan jika sebelumnya capster sudah punya foto
+            if ($service->photo) {
+                Storage::disk('public')->delete($service->photo);
+            }
+
+            // 2. Simpan foto yang baru dan tambahkan ke array $data
+            $data['photo'] = $request->file('photo')->store('service', 'public');
+        }
+
+
+        $service->update($data);
 
         return to_route('services.index');
     }
