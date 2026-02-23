@@ -94,4 +94,10 @@ class PricingController extends Controller
         ]);
         return to_route('pricings.index');
     }
+
+    public function remove(Pricing $pricing)
+    {
+        $pricing->delete();
+        return to_route('pricings.index');
+    }
 }

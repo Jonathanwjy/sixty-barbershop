@@ -181,7 +181,7 @@ export default function PricingIndex({
                                                         Edit
                                                     </Link>
                                                     <Link
-                                                        href={`/admin/services/${pricing.id}`}
+                                                        href={`/admin/pricings/delete/${pricing.id}`}
                                                         method="delete"
                                                         as="button"
                                                         className="font-medium text-red-600 hover:text-red-800 hover:underline"

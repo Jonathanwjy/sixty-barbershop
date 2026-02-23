@@ -27,4 +27,22 @@ class LandingController extends Controller
     {
         return Inertia::render('admin/dashboard');
     }
+
+    public function allService()
+    {
+
+        $services = Service::where('status', 'active')->with('pricing')->get()->map(function ($service) {
+            $minPrice = $service->pricing->min('price');
+            $service->min_price = $minPrice ?? 0;
+            return $service;
+        });
+        return Inertia::render('user/service-page', [
+            'services' => $services,
+        ]);
+    }
+
+    public function ProfileSetting()
+    {
+        return Inertia::render('user/settings/profile');
+    }
 }

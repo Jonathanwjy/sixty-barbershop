@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CapsterController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\PricingController;
@@ -11,7 +12,9 @@ use App\Http\Middleware\AdminMiddleware;
 use App\Models\Capster;
 
 Route::get('/', [LandingController::class, 'index']);
+Route::get('all-services', [LandingController::class, 'allService']);
 
+Route::get('booking-history', [BookingController::class, 'bookingHistory']);
 Route::prefix('admin')
     ->middleware(['auth', 'verified', 'admin'])
     ->group(function () {
@@ -43,6 +46,7 @@ Route::prefix('admin')
             Route::post('store', [PricingController::class, 'store'])->name('pricings.store');
             Route::get('edit/{pricing}', [PricingController::class, 'edit'])->name('pricings.edit');
             Route::put('update/{pricing}', [PricingController::class, 'update'])->name('pricings.update');
+            Route::delete('delete/{pricing}', [PricingController::class, 'remove'])->name('pricing.remove');
         });
     });
 

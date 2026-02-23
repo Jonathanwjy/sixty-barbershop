@@ -3,13 +3,22 @@ import { Link, usePage } from '@inertiajs/react';
 import { Menu } from 'lucide-react'; // Icon Hamburger
 import { Button } from '@/components/ui/button';
 import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuShortcut,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import Logout from '@/components/ui/logout';
+import {
     Sheet,
     SheetContent,
     SheetHeader,
     SheetTitle,
     SheetTrigger,
-} from '@/components/ui/sheet'; // Import komponen Sheet
-import Logout from '@/components/ui/logout';
+} from '@/components/ui/sheet';
 
 export default function Navbar() {
     // Mengambil data user dari global props
@@ -56,15 +65,32 @@ export default function Navbar() {
                     <div className="ml-4 flex items-center gap-4">
                         {auth.user ? (
                             <>
-                                <Link href="/booking">
-                                    <Button
-                                        size="default"
-                                        className="font-semibold"
-                                    >
-                                        Book Now
-                                    </Button>
-                                </Link>
-                                <Logout />
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button variant="ghost">Menu</Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent>
+                                        <DropdownMenuGroup>
+                                            <DropdownMenuItem>
+                                                <Link href="/settings">
+                                                    Profile
+                                                </Link>
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem>
+                                                Booking
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem>
+                                                <Link href="/booking-history">
+                                                    History
+                                                </Link>
+                                            </DropdownMenuItem>
+                                        </DropdownMenuGroup>
+                                        <DropdownMenuSeparator />
+                                        <DropdownMenuItem>
+                                            <Logout />
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
                             </>
                         ) : (
                             <div className="flex items-center gap-2">
@@ -124,14 +150,30 @@ export default function Navbar() {
                                 {/* Mobile Auth Buttons */}
                                 <div className="flex flex-col gap-3">
                                     {auth.user ? (
-                                        <Link
-                                            href="/booking"
-                                            onClick={() => setIsOpen(false)}
-                                        >
-                                            <Button className="w-full font-semibold">
-                                                Book Now
-                                            </Button>
-                                        </Link>
+                                        <>
+                                            <Link
+                                                href="/setting"
+                                                onClick={() => setIsOpen(false)} // Tutup menu saat link diklik
+                                                className="text-md rounded-md p-2 font-medium transition-colors hover:bg-accent-foreground hover:text-accent"
+                                            >
+                                                Profile
+                                            </Link>
+                                            <Link
+                                                href=""
+                                                onClick={() => setIsOpen(false)} // Tutup menu saat link diklik
+                                                className="text-md rounded-md p-2 font-medium transition-colors hover:bg-accent-foreground hover:text-accent"
+                                            >
+                                                Booking
+                                            </Link>
+                                            <Link
+                                                href=""
+                                                onClick={() => setIsOpen(false)} // Tutup menu saat link diklik
+                                                className="text-md rounded-md p-2 font-medium transition-colors hover:bg-accent-foreground hover:text-accent"
+                                            >
+                                                History
+                                            </Link>
+                                            <Logout />
+                                        </>
                                     ) : (
                                         <>
                                             <Link

@@ -12,6 +12,7 @@ import SettingsLayout from '@/layouts/settings/layout';
 import { edit } from '@/routes/profile';
 import { send } from '@/routes/verification';
 import type { BreadcrumbItem, SharedData } from '@/types';
+import UserSettingsLayout from './layout';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -135,8 +136,6 @@ export default function Profile({
                     )}
                 </Form>
             </div>
-
-            <DeleteUser />
         </SettingsLayout>
     );
 }

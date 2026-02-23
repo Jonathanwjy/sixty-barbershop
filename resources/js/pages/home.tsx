@@ -3,6 +3,7 @@ import HeroSection from '@/components/user/banner-carousel';
 import CapsterCard from '@/components/user/capster-card';
 import ServiceCardHome from '@/components/user/service-card-home';
 import AppLayout from '@/layouts/app-layout';
+import { Link } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 
 interface Capster {
@@ -93,7 +94,7 @@ export default function Home({
                         whileTap={{ scale: 0.95 }}
                         className="hover: mx-auto mt-8 flex cursor-pointer rounded-md border border-primary bg-primary px-4 py-2 text-primary-foreground hover:bg-black hover:text-white"
                     >
-                        Full Services
+                        <Link href="/all-services">Full Services</Link>
                     </motion.button>
                 </section>
 
