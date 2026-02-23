@@ -13,7 +13,13 @@ return new class extends Migration
     {
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
-
+            $table->foreignId('user_id')->references('id')->on('users');
+            $table->foreignId('service_id')->references('id')->on('services');
+            $table->foreignId('capster_id')->references('id')->on('capsters');
+            $table->integer('price')->nullable();
+            $table->date('date');
+            $table->time('start_time');
+            $table->time('end_time')->nullable();
             $table->timestamps();
         });
     }

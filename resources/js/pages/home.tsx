@@ -30,13 +30,32 @@ export default function Home({
     capsters: Capster[];
     services: Service[];
 }) {
+    // Variabel konfigurasi animasi dasar agar kode lebih bersih
+    const fadeUpVariant = {
+        hidden: { opacity: 0, y: 50 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: { duration: 0.6, ease: 'easeOut' },
+        },
+    };
+
     return (
         <>
             <AppLayout>
+                {/* Hero Section (Tanpa scroll animation karena ini paling atas) */}
                 <section className="hero">
                     <HeroSection />
                 </section>
-                <section className="about-us w-full px-12 py-12 md:px-34">
+
+                {/* About Us Section */}
+                <motion.section
+                    className="about-us w-full px-12 py-12 md:px-34"
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, amount: 0.2 }} // Animasi jalan saat 20% elemen masuk layar, dan hanya sekali
+                    variants={fadeUpVariant}
+                >
                     <h1 className="mb-4 text-center text-4xl font-bold underline">
                         About Us
                     </h1>
@@ -60,8 +79,16 @@ export default function Home({
                             alt="About Us"
                         />
                     </div>
-                </section>
-                <section className="services w-full px-12 py-12 md:px-32">
+                </motion.section>
+
+                {/* Services Section */}
+                <motion.section
+                    className="services w-full px-12 py-12 md:px-32"
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, amount: 0.1 }}
+                    variants={fadeUpVariant}
+                >
                     <h1 className="text-center text-4xl font-bold underline">
                         Main Services
                     </h1>
@@ -69,18 +96,29 @@ export default function Home({
                         Beberapa layanan utama yang kami tawarkan untuk Anda.
                     </p>
                     <div className="grid justify-between gap-6 md:grid-cols-3 md:gap-18">
-                        {/* Konten layanan utama akan ditambahkan di sini */}
                         {services.map((service, index) => (
-                            <ServiceCardHome
+                            // Membungkus card dengan motion.div untuk animasi individual + stagger
+                            <motion.div
                                 key={index}
-                                name={service.name}
-                                duration={service.duration}
-                                min_price={service.min_price}
-                                photo={service.photo}
-                                description={service.description}
-                            />
+                                initial={{ opacity: 0, y: 30 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{
+                                    duration: 0.5,
+                                    delay: index * 0.15,
+                                }} // Delay bertingkat berdasarkan index
+                            >
+                                <ServiceCardHome
+                                    name={service.name}
+                                    duration={service.duration}
+                                    min_price={service.min_price}
+                                    photo={service.photo}
+                                    description={service.description}
+                                />
+                            </motion.div>
                         ))}
                     </div>
+
                     <motion.button
                         whileHover={{
                             scale: 1.1,
@@ -96,24 +134,18 @@ export default function Home({
                     >
                         <Link href="/all-services">Full Services</Link>
                     </motion.button>
-                </section>
+                </motion.section>
 
-                <section
-                    // 1. Tambah 'w-full' dan 'overflow-hidden'
-                    // 2. Hapus 'mx-auto' dari sini (pindahkan logika tengah ke container di dalam)
-                    className="capster relative w-full overflow-hidden bg-cover bg-center bg-no-repeat py-12"
-                    style={{
-                        backgroundImage:
-                            "url('/images/capster/capster-bg.jpg')",
-                        backgroundPosition: 'center',
-                    }}
+                {/* Capsters Section */}
+                <motion.section
+                    className="capster relative w-full overflow-hidden py-12"
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, amount: 0.1 }}
+                    variants={fadeUpVariant}
                 >
-                    <div className="absolute inset-0 bg-black/70"></div>
-
-                    {/* Container ini yang membuat konten ada di tengah */}
+                    <div className="absolute"></div>
                     <div className="relative z-10 container mx-auto px-24">
-                        {' '}
-                        {/* Tambah px-4 di sini untuk safety margin di HP */}
                         <h1 className="mb-4 text-center text-4xl font-bold text-primary underline">
                             Our Capsters
                         </h1>
@@ -121,21 +153,37 @@ export default function Home({
                             Capster kami penuh pengalaman dan sangat teliti
                             dalam melayani pelanggan.
                         </p>
-                        {/* Grid Container */}
-                        {/* Hapus padding horizontal besar di sini, biarkan container yang handle */}
                         <div className="grid justify-center gap-6 md:grid-cols-2 md:gap-12">
                             {capsters.map((capster, index) => (
-                                <CapsterCard
+                                <motion.div
                                     key={index}
-                                    name={capster.name}
-                                    photo={capster.photo}
-                                    description={capster.description}
-                                />
+                                    initial={{ opacity: 0, scale: 0.9 }}
+                                    whileInView={{ opacity: 1, scale: 1 }}
+                                    viewport={{ once: true }}
+                                    transition={{
+                                        duration: 0.4,
+                                        delay: index * 0.2,
+                                    }} // Efek muncul membesar
+                                >
+                                    <CapsterCard
+                                        name={capster.name}
+                                        photo={capster.photo}
+                                        description={capster.description}
+                                    />
+                                </motion.div>
                             ))}
                         </div>
                     </div>
-                </section>
-                <section className="contact-us w-full bg-primary px-12 py-12 text-primary-foreground md:px-32">
+                </motion.section>
+
+                {/* Contact Us Section */}
+                <motion.section
+                    className="contact-us w-full bg-primary px-12 py-12 text-primary-foreground md:px-32"
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true }}
+                    variants={fadeUpVariant}
+                >
                     <div className="flex justify-between">
                         <div>
                             <h1 className="mb-4 text-start text-4xl font-bold underline">
@@ -147,7 +195,7 @@ export default function Home({
                             <h1>Kontak Kami</h1>
                         </div>
                     </div>
-                </section>
+                </motion.section>
             </AppLayout>
         </>
     );

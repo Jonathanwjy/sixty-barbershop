@@ -70,11 +70,6 @@ export default function HeroSection() {
                 <CarouselNext className="right-4" /> */}
             </Carousel>
 
-            {/* === 2. BAGIAN OVERLAY TOMBOL (TENGAH) === */}
-            {/* 'absolute inset-0': Memenuhi seluruh area section parent.
-                'flex items-center justify-center': Menengahkan konten secara vertikal dan horizontal.
-                'z-20': Memastikan layer ini berada DI ATAS carousel.
-            */}
             <div className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-4 px-4 text-center">
                 {/* Opsional: Tambahkan Headline agar lebih menarik */}
                 <h1 className="text-2xl font-bold text-white drop-shadow-lg md:text-5xl">
