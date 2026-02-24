@@ -107,7 +107,7 @@ export default function BookingForm({
                 <div className="mb-6 text-center">
                     <h1 className="text-2xl font-bold">Booking Form</h1>
                     <p className="mt-1 text-sm text-muted-foreground md:text-base">
-                        Silahkan pilih layanan, capster, dan jadwal booking Anda
+                        Silahkan pilih capster, service dan jadwal yang tersedia
                     </p>
                 </div>
 

@@ -24,6 +24,10 @@ class BookingController extends Controller
         if ($request->has('date') && $request->has('capster_id')) {
             $bookings = Booking::where('date', $request->date)
                 ->where('capster_id', $request->capster_id)
+                // --- TAMBAHKAN BARIS INI ---
+                // Abaikan jadwal yang statusnya dibatalkan, gagal, atau kadaluarsa
+                ->whereNotIn('booking_status', ['canceled'])
+                // ---------------------------
                 ->get(['start_time', 'end_time']);
 
             foreach ($bookings as $booking) {
@@ -38,6 +42,7 @@ class BookingController extends Controller
                 }
             }
         }
+
         return Inertia::render('user/booking-form', [
             'capsters' => $capters,
             'services' => $services,
@@ -77,7 +82,7 @@ class BookingController extends Controller
         // 5. Validasi Bentrok Jadwal (Double Booking Check)
         $isConflict = Booking::where('date', $request->date)
             ->where('capster_id', $request->capster_id)
-            ->whereNotIn('booking_status', ['canceled', 'expired', 'failed']) // Abaikan jadwal yang sudah batal
+            ->whereNotIn('booking_status', ['canceled'])
             ->where(function ($query) use ($startTime, $endTime) {
                 $query->where(function ($q) use ($startTime, $endTime) {
                     $q->where('start_time', '<', $endTime->format('H:i:s'))
@@ -127,7 +132,11 @@ class BookingController extends Controller
                 'finish' => route('home'),
                 'unfinish' => route('home'),
                 'error' => route('home'),
-            ]
+            ],
+            'expiry' => array(
+                'duration' => 15,     // Angka durasinya (contoh: 15)
+                'unit' => 'minute',          // Satuannya: 'minute', 'hour', atau 'day'
+            ),
         );
 
         try {
@@ -160,6 +169,52 @@ class BookingController extends Controller
             'midtransClientKey' => config('midtrans.client_key'),
             // Kita kirimkan status environment untuk menentukan URL script Sandbox/Production
             'isProduction' => config('midtrans.is_production'),
+        ]);
+    }
+
+    public function UserIndex()
+    {
+        $userId = Auth::id();
+
+        // 1. Belum Dibayar (Menunggu Pembayaran)
+        $unpaidBook = Booking::with(['service', 'capster'])
+            ->where('user_id', $userId)
+            ->where('payment_status', 'pending')
+            ->where('booking_status', 'pending')
+            ->latest()
+            ->get();
+
+        // 2. Berjalan (Sudah Dibayar & Dikonfirmasi)
+        $ongoingBook = Booking::with(['service', 'capster'])
+            ->where('user_id', $userId)
+            ->where('payment_status', 'paid')
+            ->where('booking_status', 'confirmed')
+            ->latest()
+            ->get();
+
+        // 3. Selesai
+        $finishedBook = Booking::with(['service', 'capster'])
+            ->where('user_id', $userId)
+            ->where('booking_status', 'completed')
+            ->latest()
+            ->get();
+
+        // 4. Batal / Gagal / Kadaluarsa
+        $canceledBook = Booking::with(['service', 'capster'])
+            ->where('user_id', $userId)
+            ->where(function ($query) {
+                // Menggabungkan kondisi: jika payment gagal/expired ATAU booking dicancel
+                $query->whereIn('payment_status', ['expired', 'failed'])
+                    ->orWhere('booking_status', 'canceled');
+            })
+            ->latest()
+            ->get();
+
+        return Inertia::render('user/booking-history', [
+            'unpaidBook' => $unpaidBook,
+            'ongoingBook' => $ongoingBook,
+            'finishedBook' => $finishedBook,
+            'canceledBook' => $canceledBook,
         ]);
     }
 

@@ -48,7 +48,8 @@ class PaymentController extends Controller
             case 'settlement':
             case 'capture':
                 $booking->update([
-                    'payment_status' => 'paid'
+                    'payment_status' => 'paid',
+                    'booking_status' => 'confirmed'
                 ]);
                 break;
 
@@ -62,7 +63,8 @@ class PaymentController extends Controller
             case 'cancel':
             case 'deny':
                 $booking->update([
-                    'payment_status' => 'failed'
+                    'payment_status' => 'failed',
+                    'booking_status' => 'canceled'
                 ]);
                 break;
         }

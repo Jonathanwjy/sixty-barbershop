@@ -104,9 +104,9 @@ export default function BookingCheckout({
         <AppLayout>
             <div className="mx-auto mt-12 mb-12 flex w-11/12 flex-col rounded-lg border border-gray-300 p-6 shadow-sm md:w-1/2 lg:w-1/3">
                 <div className="mb-6 text-center">
-                    <h1 className="text-2xl font-bold">Ringkasan Booking</h1>
+                    <h1 className="text-2xl font-bold">Booking Sumary</h1>
                     <p className="mt-1 text-sm text-muted-foreground md:text-base">
-                        Selesaikan pembayaran untuk mengamankan jadwal Anda.
+                        Silahkan selesaikan pembayaran
                     </p>
                 </div>
 
