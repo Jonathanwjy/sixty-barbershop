@@ -11,8 +11,12 @@ use Laravel\Fortify\Features;
 use App\Http\Middleware\AdminMiddleware;
 use App\Models\Capster;
 
-Route::get('/', [LandingController::class, 'index']);
+Route::get('/', [LandingController::class, 'index'])->name('home');
 Route::get('all-services', [LandingController::class, 'allService']);
+Route::prefix('bookings')->group(function () {
+    Route::get('create', [BookingController::class, 'create'])->name('bookings.create');
+    Route::post('store', [BookingController::class, 'store'])->name('bookings.store');
+});
 
 Route::get('booking-history', [BookingController::class, 'bookingHistory']);
 Route::prefix('admin')
