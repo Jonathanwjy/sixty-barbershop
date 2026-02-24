@@ -3,20 +3,25 @@
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CapsterController;
 use App\Http\Controllers\LandingController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PricingController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Middleware\AdminMiddleware;
+use App\Models\Capster;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
-use App\Http\Middleware\AdminMiddleware;
-use App\Models\Capster;
 
 Route::get('/', [LandingController::class, 'index'])->name('home');
 Route::get('all-services', [LandingController::class, 'allService']);
 Route::prefix('bookings')->group(function () {
     Route::get('create', [BookingController::class, 'create'])->name('bookings.create');
     Route::post('store', [BookingController::class, 'store'])->name('bookings.store');
+    Route::get('checkout/{booking}', [BookingController::class, 'checkout'])->name('bookings.checkout');
+    Route::post('cancel/{booking}', [BookingController::class, 'cancel'])->name('bookings.cancel');
 });
+
+Route::post('/midtrans/callback', [PaymentController::class, 'callback']);
 
 Route::get('booking-history', [BookingController::class, 'bookingHistory']);
 Route::prefix('admin')

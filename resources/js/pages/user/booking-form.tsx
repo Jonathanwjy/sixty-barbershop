@@ -244,10 +244,14 @@ export default function BookingForm({
                     </div>
 
                     {/* SUBMIT BUTTON */}
+                    {/* SUBMIT BUTTON */}
                     <Button
                         type="submit"
                         className="mt-4 w-full md:w-auto md:self-end"
-                        disabled={processing || !data.start_time}
+                        // Tambahkan !selectedPricing di sini
+                        disabled={
+                            processing || !data.start_time || !selectedPricing
+                        }
                     >
                         {processing ? 'Memproses...' : 'Booking Sekarang'}
                     </Button>

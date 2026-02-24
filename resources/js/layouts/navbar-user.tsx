@@ -77,7 +77,8 @@ export default function Navbar() {
                                                 </Link>
                                             </DropdownMenuItem>
                                             <DropdownMenuItem>
-                                                Booking
+                                                <Link href="/bookings/create">Booking</Link>
+
                                             </DropdownMenuItem>
                                             <DropdownMenuItem>
                                                 <Link href="/booking-history">

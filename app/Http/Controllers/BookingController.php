@@ -46,6 +46,9 @@ class BookingController extends Controller
         ]);
     }
 
+    /**
+     * Menyimpan data booking dan generate Snap Token Midtrans.
+     */
     public function store(Request $request)
     {
         // 1. Validasi Input
@@ -54,6 +57,8 @@ class BookingController extends Controller
             'capster_id' => 'required|exists:capsters,id',
             'date' => 'required|date|after_or_equal:today',
             'start_time' => 'required|date_format:H:i',
+        ], [
+            'date.after_or_equal' => 'Tanggal booking tidak boleh kurang dari hari ini.',
         ]);
 
         // 2. Ambil Harga (Price) dari tabel Pricings
@@ -61,22 +66,19 @@ class BookingController extends Controller
             ->where('capster_id', $request->capster_id)
             ->first();
 
-        // 3. Ambil Durasi dari tabel Services untuk menghitung end_time
+        // 3. Ambil Durasi dari tabel Services
         $service = Service::findOrFail($request->service_id);
+        $durationInMinutes = $service->duration ?? 30; // Default 30 menit jika kosong
 
-        // Asumsi: Kamu memiliki kolom 'duration' (dalam satuan menit) di tabel services.
-        // Jika belum ada, kamu bisa menyesuaikan baris ini (misalnya default 30 atau 60 menit).
-        $durationInMinutes = $service->duration ?? 30;
-
-        // 4. Hitung waktu selesai (end_time)
+        // 4. Hitung Waktu Selesai (End Time)
         $startTime = Carbon::parse($request->start_time);
         $endTime = $startTime->copy()->addMinutes($durationInMinutes);
 
-        // 5. Validasi Bentrok (Double Booking Check) di sisi Backend untuk keamanan ekstra
+        // 5. Validasi Bentrok Jadwal (Double Booking Check)
         $isConflict = Booking::where('date', $request->date)
             ->where('capster_id', $request->capster_id)
+            ->whereNotIn('booking_status', ['canceled', 'expired', 'failed']) // Abaikan jadwal yang sudah batal
             ->where(function ($query) use ($startTime, $endTime) {
-                // Mengecek apakah rentang waktu yang dipilih tumpang tindih dengan jadwal yang sudah ada
                 $query->where(function ($q) use ($startTime, $endTime) {
                     $q->where('start_time', '<', $endTime->format('H:i:s'))
                         ->where('end_time', '>', $startTime->format('H:i:s'));
@@ -90,23 +92,120 @@ class BookingController extends Controller
             ]);
         }
 
-        // 6. Simpan Data Booking
-        Booking::create([
+        // 6. Simpan Data Booking ke Database dengan Status Awal
+        $booking = Booking::create([
             'user_id' => Auth::id(),
             'service_id' => $request->service_id,
             'capster_id' => $request->capster_id,
-            'price' => $pricing ? $pricing->price : null,
+            'price' => $pricing ? $pricing->price : 0,
             'date' => $request->date,
             'start_time' => $startTime->format('H:i:s'),
             'end_time' => $endTime->format('H:i:s'),
+            'payment_status' => 'pending', // Menunggu pembayaran
+            'booking_status' => 'pending', // Menunggu konfirmasi
         ]);
 
-        // 7. Redirect ke halaman yang diinginkan (contoh: dashboard atau history booking)
-        return to_route('home')->with('success', 'Booking berhasil dibuat!');
+        // 7. Konfigurasi Midtrans dari file config/midtrans.php
+        \Midtrans\Config::$serverKey = config('midtrans.server_key');
+        \Midtrans\Config::$isProduction = config('midtrans.is_production');
+        \Midtrans\Config::$isSanitized = true;
+        \Midtrans\Config::$is3ds = true;
+
+        $grossAmount = $booking->price > 0 ? $booking->price : 10000;
+
+        $params = array(
+            'transaction_details' => array(
+                // Buat Order ID unik (Contoh: BOOK-1-1708123456)
+                'order_id' => 'BOOK-' . $booking->id . '-' . time(),
+                'gross_amount' => $grossAmount,
+            ),
+            'customer_details' => array(
+                'first_name' => Auth::user()->name,
+                'email' => Auth::user()->email,
+            ),
+            'callbacks' => [
+                'finish' => route('home'),
+                'unfinish' => route('home'),
+                'error' => route('home'),
+            ]
+        );
+
+        try {
+            $snapToken = \Midtrans\Snap::getSnapToken($params);
+
+            $booking->update(['snap_token' => $snapToken]);
+
+            return to_route('bookings.checkout', $booking->id);
+        } catch (\Exception $e) {
+
+            $booking->delete();
+
+            dd($e->getMessage());
+        }
+    }
+
+    public function checkout(Booking $booking)
+    {
+        // Keamanan: Pastikan user hanya bisa melihat halaman checkout miliknya sendiri
+        if ($booking->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        // Load data service dan capster agar bisa ditampilkan di ringkasan pesanan
+        $booking->load(['service', 'capster']);
+
+        return Inertia::render('user/booking-checkout', [
+            'booking' => $booking,
+            // Kita butuh Client Key untuk dimuat di script Frontend Midtrans
+            'midtransClientKey' => config('midtrans.client_key'),
+            // Kita kirimkan status environment untuk menentukan URL script Sandbox/Production
+            'isProduction' => config('midtrans.is_production'),
+        ]);
+    }
+
+    public function cancel(Booking $booking)
+    {
+        // 1. Keamanan: Pastikan yang membatalkan adalah pemilik booking
+        if ($booking->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        // 2. Pastikan booking masih dalam status pending sebelum dibatalkan
+        if ($booking->payment_status !== 'pending') {
+            return back()->withErrors(['message' => 'Pesanan tidak dapat dibatalkan karena statusnya sudah ' . $booking->payment_status]);
+        }
+
+        // 3. Update status di database sesuai permintaanmu
+        $booking->update([
+            'payment_status' => 'failed',
+            'booking_status' => 'canceled',
+        ]);
+
+        /* * Opsional: Batalkan juga tagihan di sisi Midtrans
+         * agar token Snap-nya benar-benar mati dan tidak bisa dibayar lagi.
+         */
+        try {
+            \Midtrans\Config::$serverKey = config('midtrans.server_key');
+            \Midtrans\Config::$isProduction = config('midtrans.is_production');
+
+            // Format order_id harus sama persis dengan yang kamu kirim saat method store()
+            // Contoh format kita sebelumnya: 'BOOK-' . $booking->id . '-' . waktu_tertentu
+            // Karena Midtrans butuh Order ID asli, cara paling aman untuk aplikasi produksi
+            // adalah menyimpan 'order_id' (contoh: BOOK-15-1708123456) ke tabel database.
+            // Namun jika kamu belum menyimpannya, membatalkan di sisi database lokal seperti #3 di atas sudah cukup aman untuk mencegah double-booking.
+
+        } catch (\Exception $e) {
+            // Abaikan error midtrans jika transaksi belum tercatat di sisi mereka
+        }
+
+        // 4. Redirect kembali ke dashboard dengan pesan sukses
+        // Sesuaikan 'dashboard' dengan route halaman utamamu
+        return to_route('home')->with('success', 'Pesanan berhasil dibatalkan.');
     }
 
     public function bookingHistory()
     {
+
         return Inertia::render('user/booking-history');
     }
 }

@@ -14,6 +14,9 @@ class Booking extends Model
         'date',
         'start_time',
         'end_time',
+        'payment_status',
+        'booking_status',
+        'snap_token',
     ];
 
     public function user()
@@ -23,11 +26,11 @@ class Booking extends Model
 
     public function capster()
     {
-        return $this->hasOne(Capster::class);
+        return $this->belongsTo(Capster::class);
     }
 
     public function service()
     {
-        return $this->hasOne(Service::class);
+        return $this->belongsTo(Service::class);
     }
 }
