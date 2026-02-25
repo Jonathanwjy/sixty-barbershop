@@ -1,10 +1,10 @@
+import { Link, router } from '@inertiajs/react';
+import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import HeroSection from '@/components/user/banner-carousel';
 import CapsterCard from '@/components/user/capster-card';
 import ServiceCardHome from '@/components/user/service-card-home';
 import AppLayout from '@/layouts/app-layout';
-import { Link } from '@inertiajs/react';
-import { motion } from 'framer-motion';
 
 interface Capster {
     id: number;
@@ -50,11 +50,12 @@ export default function Home({
 
                 {/* About Us Section */}
                 <motion.section
-                    className="about-us w-full px-12 py-12 md:px-34"
+                    className="about-us w-full py-12 pt-36 pb-12 md:px-34"
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true, amount: 0.2 }} // Animasi jalan saat 20% elemen masuk layar, dan hanya sekali
                     variants={fadeUpVariant}
+                    id="about"
                 >
                     <h1 className="mb-4 text-center text-4xl font-bold underline">
                         About Us
@@ -83,11 +84,12 @@ export default function Home({
 
                 {/* Services Section */}
                 <motion.section
-                    className="services w-full px-12 py-12 md:px-32"
+                    className="services w-full py-12 pt-36 pb-12 md:px-32"
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true, amount: 0.1 }}
                     variants={fadeUpVariant}
+                    id="service"
                 >
                     <h1 className="text-center text-4xl font-bold underline">
                         Main Services
@@ -120,6 +122,7 @@ export default function Home({
                     </div>
 
                     <motion.button
+                        onClick={() => router.get('/all-services')}
                         whileHover={{
                             scale: 1.1,
                             x: [0, -3, 3, -3, 3, 0],
@@ -132,17 +135,18 @@ export default function Home({
                         whileTap={{ scale: 0.95 }}
                         className="hover: mx-auto mt-8 flex cursor-pointer rounded-md border border-primary bg-primary px-4 py-2 text-primary-foreground hover:bg-black hover:text-white"
                     >
-                        <Link href="/all-services">Full Services</Link>
+                        All Services
                     </motion.button>
                 </motion.section>
 
                 {/* Capsters Section */}
                 <motion.section
-                    className="capster relative w-full overflow-hidden py-12"
+                    className="capster relative w-full overflow-hidden py-12 pt-36"
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true, amount: 0.1 }}
                     variants={fadeUpVariant}
+                    id="capster"
                 >
                     <div className="absolute"></div>
                     <div className="relative z-10 container mx-auto px-24">

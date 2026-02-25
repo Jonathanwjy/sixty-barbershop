@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, usePage } from '@inertiajs/react';
+import { Link, router, usePage } from '@inertiajs/react';
 import { Menu } from 'lucide-react'; // Icon Hamburger
 import { Button } from '@/components/ui/button';
 import {
@@ -29,9 +29,9 @@ export default function Navbar() {
 
     const navLinks = [
         { name: 'Home', href: '/' },
-        { name: 'Service', href: '/service' },
-        { name: 'Capster', href: '/capster' },
-        { name: 'About', href: '/about' },
+        { name: 'Service', href: '/#service' },
+        { name: 'Capster', href: '/#capster' },
+        { name: 'About', href: '/#about' },
     ];
 
     return (
@@ -71,19 +71,32 @@ export default function Navbar() {
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent>
                                         <DropdownMenuGroup>
-                                            <DropdownMenuItem>
-                                                <Link href="/settings">
-                                                    Profile
-                                                </Link>
+                                            <DropdownMenuItem
+                                                onClick={() =>
+                                                    router.get('/settings')
+                                                }
+                                            >
+                                                Profile
                                             </DropdownMenuItem>
-                                            <DropdownMenuItem>
-                                                <Link href="/bookings/create">Booking</Link>
 
+                                            <DropdownMenuItem
+                                                onClick={() =>
+                                                    router.get(
+                                                        '/bookings/create',
+                                                    )
+                                                }
+                                            >
+                                                Booking
                                             </DropdownMenuItem>
-                                            <DropdownMenuItem>
-                                                <Link href="/booking-history">
-                                                    History
-                                                </Link>
+
+                                            <DropdownMenuItem
+                                                onClick={() =>
+                                                    router.get(
+                                                        '/bookings/history',
+                                                    )
+                                                }
+                                            >
+                                                History
                                             </DropdownMenuItem>
                                         </DropdownMenuGroup>
                                         <DropdownMenuSeparator />
@@ -153,21 +166,21 @@ export default function Navbar() {
                                     {auth.user ? (
                                         <>
                                             <Link
-                                                href="/setting"
+                                                href="/settings"
                                                 onClick={() => setIsOpen(false)} // Tutup menu saat link diklik
                                                 className="text-md rounded-md p-2 font-medium transition-colors hover:bg-accent-foreground hover:text-accent"
                                             >
                                                 Profile
                                             </Link>
                                             <Link
-                                                href=""
+                                                href="/bookings/create"
                                                 onClick={() => setIsOpen(false)} // Tutup menu saat link diklik
                                                 className="text-md rounded-md p-2 font-medium transition-colors hover:bg-accent-foreground hover:text-accent"
                                             >
                                                 Booking
                                             </Link>
                                             <Link
-                                                href=""
+                                                href="/bookings/history"
                                                 onClick={() => setIsOpen(false)} // Tutup menu saat link diklik
                                                 className="text-md rounded-md p-2 font-medium transition-colors hover:bg-accent-foreground hover:text-accent"
                                             >

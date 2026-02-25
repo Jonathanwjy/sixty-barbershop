@@ -1,6 +1,7 @@
+import { Link, router } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import { Clock } from 'lucide-react'; // Opsional: Icon untuk durasi
-import { Button } from '@/components/ui/button'; // Pastikan path sesuai
+import { Button } from '@/components/ui/button';
 import service from '@/routes/admin/service';
 
 interface ServiceCardProps {
@@ -75,6 +76,8 @@ export default function ServiceCardHome({
 
                 {/* --- 5. BUTTON ACTION --- */}
                 <motion.button
+                    // Tambahkan event onClick ini:
+                    onClick={() => router.get('/bookings/create')}
                     whileHover={{
                         scale: 1.1,
                         x: [0, -3, 3, -3, 3, 0],
@@ -87,7 +90,7 @@ export default function ServiceCardHome({
                     whileTap={{ scale: 0.95 }}
                     className="cursor-pointer rounded-xl bg-primary py-3 font-semibold text-primary-foreground shadow-sm duration-300 hover:bg-black hover:text-white"
                 >
-                    Book Appointment
+                    Book Now
                 </motion.button>
             </div>
         </motion.div>

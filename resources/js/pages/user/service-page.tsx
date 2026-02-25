@@ -1,4 +1,4 @@
-import { Link } from '@inertiajs/react';
+import { Link, router } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import AppLayout from '@/layouts/app-layout';
 
@@ -102,6 +102,9 @@ export default function ServicePage({
                                 </div>
 
                                 <motion.button
+                                    onClick={() =>
+                                        router.get('/bookings/create')
+                                    }
                                     whileHover={{
                                         scale: 1.1,
                                         x: [0, -3, 3, -3, 3, 0],

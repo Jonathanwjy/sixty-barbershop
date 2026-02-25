@@ -38,9 +38,7 @@ export default function CancelBookingButton({
             )}
 
             <Button
-                type="button"
-                variant="destructive"
-                className="w-full"
+                className="w-full cursor-pointer rounded-xl bg-red-500 text-white hover:bg-red-700"
                 onClick={handleCancel}
                 disabled={processing}
             >

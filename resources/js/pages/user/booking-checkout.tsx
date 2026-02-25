@@ -106,7 +106,9 @@ export default function BookingCheckout({
                 <div className="mb-6 text-center">
                     <h1 className="text-2xl font-bold">Booking Sumary</h1>
                     <p className="mt-1 text-sm text-muted-foreground md:text-base">
-                        Silahkan selesaikan pembayaran
+                        Silahkan cek kembali kesesuaian service, capster serta
+                        waktu booking anda. Jika sudah sesuai semua, jangan lupa
+                        melakukan pembayaran.
                     </p>
                 </div>
 
@@ -140,7 +142,7 @@ export default function BookingCheckout({
                             </li>
                             <li className="flex justify-between border-b pb-2">
                                 <span className="text-muted-foreground">
-                                    Waktu:
+                                    Jam:
                                 </span>
                                 <span className="font-medium">
                                     {booking.start_time.substring(0, 5)} -{' '}
@@ -166,13 +168,6 @@ export default function BookingCheckout({
                         Bayar Sekarang
                     </Button>
 
-                    <Button
-                        variant="outline"
-                        onClick={() => router.visit('/')}
-                        className="w-full cursor-pointer"
-                    >
-                        Bayar Nanti (Dashboard)
-                    </Button>
                     <CancelBookingButton
                         bookingId={booking.id}
                         className="mt-2"

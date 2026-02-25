@@ -186,7 +186,7 @@ export default function BookingForm({
                             <p className="text-xl font-bold text-primary">
                                 {selectedPricing
                                     ? formatRupiah(selectedPricing.price)
-                                    : 'Harga belum diatur'}
+                                    : 'Maaf Belum Tersedia'}
                             </p>
                         </div>
                     )}
@@ -209,7 +209,7 @@ export default function BookingForm({
 
                     {/* BOX-BOX PEMILIHAN WAKTU */}
                     <div>
-                        <Label className="mb-3 block">Waktu Mulai</Label>
+                        <Label className="mb-3 block">Jam</Label>
                         <div className="grid grid-cols-4 gap-3 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-7">
                             {timeSlots.map((time) => {
                                 const isBooked = bookedTimes.includes(time);

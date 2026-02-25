@@ -1,30 +1,15 @@
-import { Link } from '@inertiajs/react';
-import { Button } from '@/components/ui/button';
-import CancelBookingButton from '@/components/user/cancel-booking-button';
+import { useState } from 'react'; // Tambahkan import useState
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select'; // Tambahkan import Select
+import type { Booking } from '@/components/user/booking-card';
+import BookingCard from '@/components/user/booking-card';
 import AppLayout from '@/layouts/app-layout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-
-interface Service {
-    id: number;
-    name: string;
-}
-
-interface Capster {
-    id: number;
-    name: string;
-}
-
-interface Booking {
-    id: number;
-    service: Service;
-    capster: Capster;
-    date: string;
-    start_time: string;
-    end_time: string;
-    price: number;
-    payment_status: string;
-    booking_status: string;
-}
 
 interface Props {
     unpaidBook: Booking[];
@@ -33,77 +18,6 @@ interface Props {
     canceledBook: Booking[];
 }
 
-// --- HELPER UNTUK FORMAT RUPIAH ---
-const formatRupiah = (angka: number) => {
-    return new Intl.NumberFormat('id-ID', {
-        style: 'currency',
-        currency: 'IDR',
-        minimumFractionDigits: 0,
-    }).format(angka);
-};
-
-// --- KOMPONEN KARTU BERDASARKAN DESAIN KAMU ---
-const BookingCard = ({
-    booking,
-    type,
-}: {
-    booking: Booking;
-    type: 'unpaid' | 'ongoing' | 'finished' | 'canceled';
-}) => {
-    // Label status untuk ditampilkan di desain kamu
-    const statusLabels = {
-        unpaid: 'Menunggu Pembayaran',
-        ongoing: 'Jadwal Aktif',
-        finished: 'Selesai',
-        canceled: 'Dibatalkan',
-    };
-
-    return (
-        <div className="group flex cursor-pointer flex-col justify-between rounded-lg border bg-accent px-8 py-4 text-accent-foreground transition-all duration-300 ease-in-out hover:-translate-y-2 hover:border-transparent hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)]">
-            <div>
-                <div className="flex items-start justify-between">
-                    <p className="text-2xl font-semibold transition-colors duration-300">
-                        {statusLabels[type]}
-                    </p>
-                    <div className="text-right text-sm text-accent-foreground">
-                        <p>{booking.date}</p>
-                        <p>{booking.start_time.substring(0, 5)} WIB</p>
-                    </div>
-                </div>
-                <div className="mt-4 space-y-1">
-                    <p className="text-lg font-medium">
-                        {booking.service?.name}
-                    </p>
-                    <p className="text-muted-foreground">
-                        {booking.capster?.name}
-                    </p>
-                    <p className="font-semibold text-muted-foreground">
-                        {formatRupiah(booking.price)}
-                    </p>
-                </div>
-            </div>
-
-            {/* Tombol aksi khusus untuk tab 'Belum Bayar' */}
-            {type === 'unpaid' && (
-                <div className="mt-6 flex flex-col gap-2 border-t border-accent-foreground/20 pt-4 md:flex-row md:justify-end">
-                    <CancelBookingButton
-                        bookingId={booking.id}
-                        className="w-full md:w-auto"
-                    />
-                    <Link
-                        href={`/booking/checkout/${booking.id}`}
-                        className="w-full md:w-auto"
-                    >
-                        <Button className="w-full bg-primary text-primary-foreground">
-                            Bayar Sekarang
-                        </Button>
-                    </Link>
-                </div>
-            )}
-        </div>
-    );
-};
-
 // --- KOMPONEN UTAMA ---
 export default function BookingHistory({
     unpaidBook = [],
@@ -111,6 +25,9 @@ export default function BookingHistory({
     finishedBook = [],
     canceledBook = [],
 }: Props) {
+    // State untuk mengontrol tab mana yang sedang aktif
+    const [activeTab, setActiveTab] = useState('unpaid');
+
     return (
         <>
             <AppLayout>
@@ -125,24 +42,65 @@ export default function BookingHistory({
                     </div>
 
                     <div className="px-6 md:px-12">
-                        <Tabs defaultValue="unpaid" className="w-full">
-                            {/* DAFTAR TAB */}
-                            <TabsList className="mb-8 grid h-auto w-full grid-cols-2 gap-2 bg-accent lg:grid-cols-4">
-                                <TabsTrigger value="unpaid" className="py-2.5">
+                        {/* Tambahkan value dan onValueChange ke komponen Tabs */}
+                        <Tabs
+                            value={activeTab}
+                            onValueChange={setActiveTab}
+                            className="w-full"
+                        >
+                            {/* --- TAMPILAN MOBILE: DROPDOWN MENU --- */}
+                            <div className="mb-8 block md:hidden">
+                                <Select
+                                    value={activeTab}
+                                    onValueChange={setActiveTab}
+                                >
+                                    <SelectTrigger className="h-12 w-full rounded-xl border-primary bg-accent font-medium text-accent-foreground">
+                                        <SelectValue placeholder="Pilih status booking" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="unpaid">
+                                            Belum Bayar ({unpaidBook.length})
+                                        </SelectItem>
+                                        <SelectItem value="ongoing">
+                                            Aktif ({ongoingBook.length})
+                                        </SelectItem>
+                                        <SelectItem value="finished">
+                                            Selesai ({finishedBook.length})
+                                        </SelectItem>
+                                        <SelectItem value="canceled">
+                                            Dibatalkan ({canceledBook.length})
+                                        </SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+
+                            {/* --- TAMPILAN DESKTOP: TABS PILL/KAPSUL --- */}
+                            {/* Tambahkan 'hidden md:flex' agar tidak muncul di HP */}
+                            <TabsList className="mb-8 hidden h-auto w-full items-center justify-between gap-1 rounded-full border border-primary bg-accent p-5 shadow-2xl md:flex">
+                                <TabsTrigger
+                                    value="unpaid"
+                                    className="flex-1 rounded-full px-2 py-3 text-sm text-accent-foreground transition-all data-[state=active]:bg-primary data-[state=active]:font-bold data-[state=active]:text-primary-foreground"
+                                >
                                     Belum Bayar ({unpaidBook.length})
                                 </TabsTrigger>
-                                <TabsTrigger value="ongoing" className="py-2.5">
-                                    Berjalan ({ongoingBook.length})
+
+                                <TabsTrigger
+                                    value="ongoing"
+                                    className="flex-1 rounded-full px-2 py-3 text-sm text-accent-foreground transition-all data-[state=active]:bg-primary data-[state=active]:font-bold data-[state=active]:text-primary-foreground"
+                                >
+                                    Aktif ({ongoingBook.length})
                                 </TabsTrigger>
+
                                 <TabsTrigger
                                     value="finished"
-                                    className="py-2.5"
+                                    className="flex-1 rounded-full px-2 py-3 text-sm text-accent-foreground transition-all data-[state=active]:bg-primary data-[state=active]:font-bold data-[state=active]:text-primary-foreground"
                                 >
                                     Selesai ({finishedBook.length})
                                 </TabsTrigger>
+
                                 <TabsTrigger
                                     value="canceled"
-                                    className="py-2.5"
+                                    className="flex-1 rounded-full px-2 py-3 text-sm text-accent-foreground transition-all data-[state=active]:bg-primary data-[state=active]:font-bold data-[state=active]:text-primary-foreground"
                                 >
                                     Dibatalkan ({canceledBook.length})
                                 </TabsTrigger>
@@ -152,7 +110,7 @@ export default function BookingHistory({
                             <TabsContent value="unpaid">
                                 {unpaidBook.length === 0 ? (
                                     <div className="rounded-lg border bg-accent/50 py-10 text-center text-muted-foreground">
-                                        Tidak ada pesanan belum dibayar.
+                                        Tidak ada booking belum dibayar.
                                     </div>
                                 ) : (
                                     <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
@@ -171,7 +129,7 @@ export default function BookingHistory({
                             <TabsContent value="ongoing">
                                 {ongoingBook.length === 0 ? (
                                     <div className="rounded-lg border bg-accent/50 py-10 text-center text-muted-foreground">
-                                        Tidak ada pesanan berjalan.
+                                        Tidak ada booking aktif.
                                     </div>
                                 ) : (
                                     <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
@@ -190,7 +148,7 @@ export default function BookingHistory({
                             <TabsContent value="finished">
                                 {finishedBook.length === 0 ? (
                                     <div className="rounded-lg border bg-accent/50 py-10 text-center text-muted-foreground">
-                                        Belum ada riwayat pesanan selesai.
+                                        Belum ada riwayat booking selesai.
                                     </div>
                                 ) : (
                                     <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
@@ -209,7 +167,7 @@ export default function BookingHistory({
                             <TabsContent value="canceled">
                                 {canceledBook.length === 0 ? (
                                     <div className="rounded-lg border bg-accent/50 py-10 text-center text-muted-foreground">
-                                        Tidak ada pesanan dibatalkan.
+                                        Tidak ada booking dibatalkan.
                                     </div>
                                 ) : (
                                     <div className="grid grid-cols-1 gap-8 md:grid-cols-2">

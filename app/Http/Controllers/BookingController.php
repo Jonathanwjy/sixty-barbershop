@@ -172,7 +172,7 @@ class BookingController extends Controller
         ]);
     }
 
-    public function UserIndex()
+    public function userIndex()
     {
         $userId = Auth::id();
 
@@ -255,12 +255,6 @@ class BookingController extends Controller
 
         // 4. Redirect kembali ke dashboard dengan pesan sukses
         // Sesuaikan 'dashboard' dengan route halaman utamamu
-        return to_route('home')->with('success', 'Pesanan berhasil dibatalkan.');
-    }
-
-    public function bookingHistory()
-    {
-
-        return Inertia::render('user/booking-history');
+        return to_route('bookings.history')->with('success', 'Pesanan berhasil dibatalkan.');
     }
 }

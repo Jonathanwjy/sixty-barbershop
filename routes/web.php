@@ -19,11 +19,12 @@ Route::prefix('bookings')->group(function () {
     Route::post('store', [BookingController::class, 'store'])->name('bookings.store');
     Route::get('checkout/{booking}', [BookingController::class, 'checkout'])->name('bookings.checkout');
     Route::post('cancel/{booking}', [BookingController::class, 'cancel'])->name('bookings.cancel');
+    Route::get('history', [BookingController::class, 'userIndex'])->name('bookings.history');
 });
 
 Route::post('/midtrans/callback', [PaymentController::class, 'callback']);
 
-Route::get('booking-history', [BookingController::class, 'bookingHistory']);
+
 Route::prefix('admin')
     ->middleware(['auth', 'verified', 'admin'])
     ->group(function () {
