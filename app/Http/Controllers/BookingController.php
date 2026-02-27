@@ -134,8 +134,8 @@ class BookingController extends Controller
                 'error' => route('home'),
             ],
             'expiry' => array(
-                'duration' => 15,     // Angka durasinya (contoh: 15)
-                'unit' => 'minute',          // Satuannya: 'minute', 'hour', atau 'day'
+                'duration' => 15,
+                'unit' => 'minute',
             ),
         );
 
@@ -144,7 +144,7 @@ class BookingController extends Controller
 
             $booking->update(['snap_token' => $snapToken]);
 
-            return to_route('bookings.checkout', $booking->id);
+            return to_route('bookings.checkout', $booking->id)->with('success', 'Booking berhasil dibuat, silahkan lanjut ke pembayaran');
         } catch (\Exception $e) {
 
             $booking->delete();
@@ -165,9 +165,9 @@ class BookingController extends Controller
 
         return Inertia::render('user/booking-checkout', [
             'booking' => $booking,
-            // Kita butuh Client Key untuk dimuat di script Frontend Midtrans
+
             'midtransClientKey' => config('midtrans.client_key'),
-            // Kita kirimkan status environment untuk menentukan URL script Sandbox/Production
+
             'isProduction' => config('midtrans.is_production'),
         ]);
     }
@@ -218,6 +218,85 @@ class BookingController extends Controller
         ]);
     }
 
+    public function adminIndex(Request $request)
+    {
+        $selectedDate = $request->input('date', Carbon::today()->toDateString());
+
+        $query = Booking::with(['user:id,name,email', 'service:id,name', 'capster:id,name'])
+            ->where('date', $selectedDate);
+
+        if ($request->has('search') && $request->search != '') {
+            $searchTerm = $request->search;
+            $query->whereHas('user', function ($q) use ($searchTerm) {
+                $q->where('name', 'like', '%' . $searchTerm . '%');
+            });
+        }
+
+        // --- TAMBAHAN FILTER STATUS ---
+        if ($request->has('payment_status') && $request->payment_status != '') {
+            $query->where('payment_status', $request->payment_status);
+        }
+
+        if ($request->has('booking_status') && $request->booking_status != '') {
+            $query->where('booking_status', $request->booking_status);
+        }
+        // ------------------------------
+
+        $bookings = $query
+            ->orderByRaw("FIELD(booking_status, 'confirmed', 'completed', 'pending', 'canceled')")
+            ->orderBy('start_time', 'asc')
+            ->get();
+
+        // Kirim data dan filter ke React
+        return Inertia::render('admin/booking/index', [
+            'bookings' => $bookings,
+            'filters' => [
+                'search' => $request->search,
+                'date' => $selectedDate,
+                'payment_status' => $request->payment_status,
+                'booking_status' => $request->booking_status,
+            ],
+        ]);
+    }
+
+    public function markAsCompleted(Booking $booking)
+    {
+        // Pastikan hanya booking dengan status 'confirmed' yang bisa diubah menjadi 'completed'
+        if ($booking->booking_status !== 'confirmed') {
+            return back()->with('error', 'Status tidak valid untuk diselesaikan.');
+        }
+
+        $booking->update([
+            'booking_status' => 'completed',
+        ]);
+
+        return redirect()->back()->with('success', 'Booking berhasil diselesaikan.');
+    }
+
+    public function adminCancel(Booking $booking)
+    {
+
+        if ($booking->payment_status !== 'pending') {
+            return back()->with('error', 'Booking tidak dapat dibatalkan karena statusnya sudah ' . $booking->payment_status);
+        }
+
+
+        $booking->update([
+            'payment_status' => 'failed',
+            'booking_status' => 'canceled',
+        ]);
+
+
+        try {
+            \Midtrans\Config::$serverKey = config('midtrans.server_key');
+            \Midtrans\Config::$isProduction = config('midtrans.is_production');
+        } catch (\Exception $e) {
+        }
+
+
+        return redirect()->back()->with('success', 'Booking berhasil dibatalkan.');
+    }
+
     public function cancel(Booking $booking)
     {
         // 1. Keamanan: Pastikan yang membatalkan adalah pemilik booking
@@ -227,7 +306,7 @@ class BookingController extends Controller
 
         // 2. Pastikan booking masih dalam status pending sebelum dibatalkan
         if ($booking->payment_status !== 'pending') {
-            return back()->withErrors(['message' => 'Pesanan tidak dapat dibatalkan karena statusnya sudah ' . $booking->payment_status]);
+            return back()->with('error', 'Booking tidak dapat dibatalkan karena statusnya sudah ' . $booking->payment_status);
         }
 
         // 3. Update status di database sesuai permintaanmu
@@ -255,6 +334,6 @@ class BookingController extends Controller
 
         // 4. Redirect kembali ke dashboard dengan pesan sukses
         // Sesuaikan 'dashboard' dengan route halaman utamamu
-        return to_route('bookings.history')->with('success', 'Pesanan berhasil dibatalkan.');
+        return to_route('bookings.history')->with('success', 'Booking berhasil dibatalkan.');
     }
 }

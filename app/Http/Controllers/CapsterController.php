@@ -56,7 +56,7 @@ class CapsterController extends Controller
 
         Capster::create($data);
 
-        return to_route('capsters.index');
+        return to_route('capsters.index')->with('success', 'Capster baru berhasil ditambahkan');
     }
 
     public function edit(Capster $capster)
@@ -69,38 +69,31 @@ class CapsterController extends Controller
     public function update(Request $request, Capster $capster)
     {
         Validator::make($request->all(), [
-            'name' => 'string|max:60|required',
+            'name' => 'required|string|max:60|',
             'description' => 'required|string',
-            'nickname' => 'string|max:30|required',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // <-- Tambahkan validasi foto juga di sini
+            'nickname' => 'required|string|max:30|',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ])->validate();
 
-        // Siapkan data yang akan diupdate
         $data = [
             'name' => $request->name,
             'nickname' => $request->nickname,
             'description' => $request->description,
         ];
 
-        // Cek jika user mengupload foto baru
         if ($request->hasFile('photo')) {
-            // 1. Hapus foto lama dari penyimpanan jika sebelumnya capster sudah punya foto
             if ($capster->photo) {
                 Storage::disk('public')->delete($capster->photo);
             }
-
-            // 2. Simpan foto yang baru dan tambahkan ke array $data
             $data['photo'] = $request->file('photo')->store('capster', 'public');
         }
 
-        // Update data di database
         $capster->update($data);
 
-        return to_route('capsters.index');
+        return to_route('capsters.index')->with('success', 'Data capster berhasil diperbarui');
     }
     public function toggleStatus(Capster $capster)
     {
-        // Jika status saat ini 'active', ubah jadi 'inactive', dan sebaliknya
         $newStatus = $capster->status === 'active' ? 'inactive' : 'active';
 
         $capster->update([
@@ -108,6 +101,6 @@ class CapsterController extends Controller
         ]);
 
         // Kembalikan ke halaman index tanpa reload penuh
-        return back();
+        return back()->with('success', 'Capster berhasil di' . $newStatus);
     }
 }

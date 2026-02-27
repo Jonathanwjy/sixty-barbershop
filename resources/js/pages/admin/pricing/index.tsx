@@ -7,6 +7,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import AppSidebarLayout from '@/layouts/app/app-sidebar-layout';
+import { showConfirm } from '@/alert';
 
 interface Pricing {
     id: number;
@@ -62,6 +63,37 @@ export default function PricingIndex({
             },
         );
     };
+
+    const handleDelete = async (id: number) => {
+        // Tentukan teks dinamis berdasarkan status saat ini
+
+        // Tampilkan SweetAlert konfirmasi
+        const isConfirmed = await showConfirm(
+            'Hapus harga service?',
+            `Apakah Anda yakin ingin menghapus harga service capster ini?`,
+            'Ya, hapus!',
+        );
+
+        // Jika user klik "Ya", jalankan request ke backend
+        if (isConfirmed) {
+            router.post(
+                `/admin/pricings/delete/${id}`,
+                {},
+                {
+                    preserveScroll: true,
+                },
+            );
+        }
+    };
+
+    const formatRupiah = (angka: number) => {
+        return new Intl.NumberFormat('id-ID', {
+            style: 'currency',
+            currency: 'IDR',
+            minimumFractionDigits: 0,
+        }).format(angka);
+    };
+
     return (
         <>
             <AppSidebarLayout>
@@ -168,7 +200,7 @@ export default function PricingIndex({
                                                 {pricing.capster?.name}
                                             </td>
                                             <td className="px-4 py-3 text-muted-foreground">
-                                                {pricing.price}
+                                                {formatRupiah(pricing.price)}
                                             </td>
 
                                             <td className="px-4 py-3">
@@ -181,19 +213,12 @@ export default function PricingIndex({
                                                         Edit
                                                     </Link>
                                                     <Link
-                                                        href={`/admin/pricings/delete/${pricing.id}`}
-                                                        method="delete"
-                                                        as="button"
                                                         className="font-medium text-red-600 hover:text-red-800 hover:underline"
-                                                        onClick={(e) => {
-                                                            if (
-                                                                !confirm(
-                                                                    'Yakin ingin menghapus service ini?',
-                                                                )
-                                                            ) {
-                                                                e.preventDefault();
-                                                            }
-                                                        }}
+                                                        onClick={() =>
+                                                            handleDelete(
+                                                                pricing.id,
+                                                            )
+                                                        }
                                                     >
                                                         Delete
                                                     </Link>

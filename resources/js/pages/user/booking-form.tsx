@@ -14,6 +14,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import AppLayout from '@/layouts/app-layout';
+import { showConfirm } from '@/alert';
 
 interface Service {
     id: number;
@@ -95,10 +96,30 @@ export default function BookingForm({
             minimumFractionDigits: 0,
         }).format(angka);
     };
+    const formatDate = (dateString: string) => {
+        const options: Intl.DateTimeFormatOptions = {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+        };
+        return new Date(dateString).toLocaleDateString('id-ID', options);
+    };
 
-    const submit = (e: React.FormEvent) => {
+    const submit = async (e: React.FormEvent) => {
         e.preventDefault();
-        post('/bookings/store');
+
+        // Tampilkan konfirmasi dengan detail booking
+        const isConfirmed = await showConfirm(
+            'Konfirmasi Booking',
+            `Apakah Anda yakin ingin melakukan booking pada ${formatDate(data.date)} jam ${data.start_time}? Jam dan tanggal booking tidak dapat diubah!!`,
+            'Ya, Booking Sekarang!',
+        );
+
+        // Jika ditekan Ya, maka post data ke backend
+        if (isConfirmed) {
+            post('/bookings/store');
+        }
     };
 
     return (

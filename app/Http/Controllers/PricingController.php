@@ -55,19 +55,32 @@ class PricingController extends Controller
 
     public function store(Request $request)
     {
-        Validator::make($request->all(), [
+        // 1. Validasi input dasar
+        $request->validate([
             'service_id' => ['required'],
             'capster_id' => ['required'],
-            'price' => ['required', 'min:1', 'integer']
+            'price'      => ['required', 'min:1', 'integer']
         ]);
 
+        // 2. Cek apakah kombinasi service dan capster tersebut sudah ada di database
+        $isDuplicate = Pricing::where('service_id', $request->service_id)
+            ->where('capster_id', $request->capster_id)
+            ->exists();
+
+        // 3. Jika sudah ada, kembalikan ke halaman sebelumnya dengan pesan error
+        if ($isDuplicate) {
+            return back()->with('error', 'Data harga untuk Service dan Capster ini sudah ada!');
+        }
+
+        // 4. Jika aman (belum ada), lanjutkan proses simpan
         Pricing::create([
             'service_id' => $request->service_id,
             'capster_id' => $request->capster_id,
-            'price' => $request->price
+            'price'      => $request->price
         ]);
 
-        return to_route('pricings.index');
+        // 5. Kembali ke index dengan pesan sukses
+        return to_route('pricings.index')->with('success', 'Harga service berhasil ditambahkan');
     }
 
     public function edit(Pricing $pricing)
@@ -92,12 +105,12 @@ class PricingController extends Controller
             'capster_id' => $request->capster_id,
             'price' => $request->price
         ]);
-        return to_route('pricings.index');
+        return to_route('pricings.index')->with('success', 'Harga service berhasil diperbarui');
     }
 
     public function remove(Pricing $pricing)
     {
         $pricing->delete();
-        return to_route('pricings.index');
+        return to_route('pricings.index')->with('success', 'Harga sevice berhasil dihapus');
     }
 }

@@ -24,7 +24,7 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Bookings',
-        href: '#',
+        href: '/admin/bookings/index',
         icon: BookOpen,
     },
     {

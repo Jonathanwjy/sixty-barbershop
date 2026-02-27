@@ -71,6 +71,7 @@ export default function PricingForm({
                 <Select
                     value={data.service_id}
                     onValueChange={(value) => setData('service_id', value)}
+                    disabled={isEdit}
                 >
                     <SelectTrigger className="text-muted-foreground">
                         <SelectValue placeholder="Pilih Service"></SelectValue>
@@ -98,6 +99,7 @@ export default function PricingForm({
                 <Select
                     value={data.capster_id}
                     onValueChange={(value) => setData('capster_id', value)}
+                    disabled={isEdit}
                 >
                     <SelectTrigger className="text-muted-foreground">
                         <SelectValue placeholder="Pilih Capster"></SelectValue>

@@ -2,6 +2,7 @@ import { Link, router } from '@inertiajs/react';
 import { useState, useEffect } from 'react';
 import SearchBar from '@/components/search-bar';
 import AppSidebarLayout from '@/layouts/app/app-sidebar-layout';
+import { showConfirm } from '@/alert';
 
 interface Service {
     id: number;
@@ -18,15 +19,30 @@ export default function ServiceIndex({
     services: Service[];
     filters: { search: string };
 }) {
-    const handleToggleStatus = (id: number) => {
-        router.patch(
-            `/admin/services/toggle-status/${id}`,
-            {},
-            {
-                preserveScroll: true, // Agar halaman tidak loncat ke atas saat diklik
-            },
+    const handleToggleStatus = async (id: number, currentStatus: string) => {
+        // Tentukan teks dinamis berdasarkan status saat ini
+        const actionText =
+            currentStatus === 'active' ? 'menonaktifkan' : 'aktifkan';
+
+        // Tampilkan SweetAlert konfirmasi
+        const isConfirmed = await showConfirm(
+            'Ubah Status Service?',
+            `Apakah Anda yakin ingin ${actionText} service ini?`,
+            'Ya, Ubah Status!',
         );
+
+        // Jika user klik "Ya", jalankan request ke backend
+        if (isConfirmed) {
+            router.patch(
+                `/admin/services/toggle-status/${id}`,
+                {},
+                {
+                    preserveScroll: true, // Agar halaman tidak loncat ke atas saat diklik
+                },
+            );
+        }
     };
+
     return (
         <AppSidebarLayout>
             <div className="flex flex-col gap-6 p-6">
@@ -94,6 +110,7 @@ export default function ServiceIndex({
                                                 onClick={() =>
                                                     handleToggleStatus(
                                                         service.id,
+                                                        service.status,
                                                     )
                                                 }
                                                 className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${

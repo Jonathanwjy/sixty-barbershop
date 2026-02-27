@@ -1,4 +1,5 @@
 import { Link, router } from '@inertiajs/react';
+import { showConfirm } from '@/alert';
 import SearchBar from '@/components/search-bar';
 import AppSidebarLayout from '@/layouts/app/app-sidebar-layout';
 
@@ -18,15 +19,30 @@ export default function CapsterIndex({
     capsters: Capster[];
     filters: { search: string };
 }) {
-    const handleToggleStatus = (id: number) => {
-        router.patch(
-            `/admin/capsters/toggle-status/${id}`,
-            {},
-            {
-                preserveScroll: true, // Agar halaman tidak loncat ke atas saat diklik
-            },
+    const handleToggleStatus = async (id: number, currentStatus: string) => {
+        // Tentukan teks dinamis berdasarkan status saat ini
+        const actionText =
+            currentStatus === 'active' ? 'menonaktifkan' : 'mengaktifkan';
+
+        // Tampilkan SweetAlert konfirmasi
+        const isConfirmed = await showConfirm(
+            'Ubah Status Service?',
+            `Apakah Anda yakin ingin ${actionText} capster ini?`,
+            'Ya, Ubah Status!',
         );
+
+        // Jika user klik "Ya", jalankan request ke backend
+        if (isConfirmed) {
+            router.patch(
+                `/admin/capsters/toggle-status/${id}`,
+                {},
+                {
+                    preserveScroll: true, // Agar halaman tidak loncat ke atas saat diklik
+                },
+            );
+        }
     };
+
     return (
         <>
             <AppSidebarLayout>
@@ -105,6 +121,7 @@ export default function CapsterIndex({
                                                     onClick={() =>
                                                         handleToggleStatus(
                                                             capster.id,
+                                                            capster.status,
                                                         )
                                                     }
                                                     className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${

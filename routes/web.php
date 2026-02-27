@@ -56,7 +56,13 @@ Route::prefix('admin')
             Route::post('store', [PricingController::class, 'store'])->name('pricings.store');
             Route::get('edit/{pricing}', [PricingController::class, 'edit'])->name('pricings.edit');
             Route::put('update/{pricing}', [PricingController::class, 'update'])->name('pricings.update');
-            Route::delete('delete/{pricing}', [PricingController::class, 'remove'])->name('pricing.remove');
+            Route::post('delete/{pricing}', [PricingController::class, 'remove'])->name('pricing.remove');
+        });
+
+        Route::prefix('bookings')->group(function () {
+            Route::get('index', [BookingController::class, 'adminIndex'])->name('bookings.index');
+            Route::patch('{booking}/completed', [BookingController::class, 'markAsCompleted'])->name('booking.complete');
+            Route::post('{booking}/cancel', [BookingController::class, 'adminCancel'])->name('booking.cancel');
         });
     });
 

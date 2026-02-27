@@ -61,9 +61,10 @@ class ServiceController extends Controller
         if ($request->hasFile('photo')) {
             $data['photo'] = $request->file('photo')->store('service', 'public');
         }
+
         Service::create($data);
 
-        return to_route('services.index');
+        return to_route('services.index')->with('success', 'Service Berhasil Dibuat');
     }
 
     /**
@@ -115,7 +116,7 @@ class ServiceController extends Controller
 
         $service->update($data);
 
-        return to_route('services.index');
+        return to_route('services.index')->with('success', 'Service Berhasil diperbarui');
     }
 
     /**
@@ -136,6 +137,6 @@ class ServiceController extends Controller
         ]);
 
         // Kembalikan ke halaman index tanpa reload penuh
-        return back();
+        return back()->with('success', 'Service berhasil di' . $newStatus);
     }
 }

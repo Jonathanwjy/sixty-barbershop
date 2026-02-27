@@ -1,4 +1,5 @@
-import { useForm } from '@inertiajs/react';
+import { router, useForm } from '@inertiajs/react';
+import { showConfirm } from '@/alert';
 import { Button } from '@/components/ui/button';
 
 interface CancelBookingButtonProps {
@@ -11,20 +12,25 @@ export default function CancelBookingButton({
     className,
 }: CancelBookingButtonProps) {
     // 1. Tambahkan { message: '' } agar TypeScript mengenali properti ini
-    const { post, processing, errors } = useForm({
+    const { processing, errors } = useForm({
         message: '',
     });
 
-    const handleCancel = () => {
-        if (
-            window.confirm(
-                'Apakah Anda yakin ingin membatalkan pesanan ini? Jadwal Anda akan dilepas.',
-            )
-        ) {
-            post(`/bookings/cancel/${bookingId}`, {
-                preserveScroll: true,
-                onSuccess: () => alert('Pesanan berhasil dibatalkan.'),
-            });
+    const handleCancel = async () => {
+        const isConfirmed = await showConfirm(
+            'cancel booking',
+            'Apakah Anda yakin ingin membatalkan booking ini?',
+            'Ya, Batalkan!',
+        );
+
+        if (isConfirmed) {
+            router.post(
+                `/bookings/cancel/${bookingId}`,
+                {},
+                {
+                    preserveScroll: true,
+                },
+            );
         }
     };
 
