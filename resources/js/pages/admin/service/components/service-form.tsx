@@ -16,7 +16,7 @@ interface Service {
 }
 
 interface ServiceFormProps {
-    service?: Service; // Optional: Jika ada berarti Edit, jika null berarti Create
+    service?: Service;
 }
 
 export default function ServiceForm({ service }: ServiceFormProps) {
@@ -57,8 +57,24 @@ export default function ServiceForm({ service }: ServiceFormProps) {
                 <InputError message={errors.name} className="mt-2" />
             </div>
 
+            {/* PHOTO INPUT */}
             <div className="mb-4">
-                <Label htmlFor="name">Photo</Label>
+                <Label htmlFor="photo">Photo</Label>
+
+                {/* TAMPILKAN FOTO LAMA JIKA ADA (MODE EDIT) */}
+                {isEdit && service?.photo && (
+                    <div className="mt-2 mb-3">
+                        <p className="mb-2 text-sm text-muted-foreground">
+                            Current Photo:
+                        </p>
+                        <img
+                            src={`/storage/${service.photo}`} // Sesuaikan path ini jika penyimpanan path fotomu berbeda
+                            alt="Current Service Photo"
+                            className="h-32 w-32 rounded-md border border-gray-200 object-cover"
+                        />
+                    </div>
+                )}
+
                 <Input
                     id="photo"
                     type="file"
@@ -72,8 +88,14 @@ export default function ServiceForm({ service }: ServiceFormProps) {
                     }}
                     className="mt-1 text-muted-foreground file:text-muted-foreground"
                 />
+                <p className="mt-1 text-xs text-muted-foreground">
+                    {isEdit
+                        ? 'Biarkan kosong jika tidak ingin mengubah foto.'
+                        : 'Upload foto untuk service ini.'}
+                </p>
                 <InputError message={errors.photo} className="mt-2" />
             </div>
+
             {/* DESCRIPTION INPUT */}
             <div className="mb-4">
                 <Label htmlFor="description">Description</Label>

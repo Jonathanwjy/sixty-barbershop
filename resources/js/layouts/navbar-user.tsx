@@ -42,7 +42,7 @@ export default function Navbar() {
                     <Link href="/" className="flex items-center space-x-2">
                         <div className="h-6 w-6 rounded-md bg-primary" />
                         <span className="text-xl font-bold tracking-tight">
-                            BrandName
+                            Sixty BarberShop
                         </span>
                     </Link>
                 </div>

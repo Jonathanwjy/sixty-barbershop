@@ -46,7 +46,22 @@ export default function CapsterForm({ capster }: CapsterFormProps) {
             {/* NAME INPUT */}
 
             <div className="mb-4">
-                <Label htmlFor="photo">Foto Profil</Label>
+                <Label htmlFor="photo">Photo</Label>
+
+                {/* TAMPILKAN FOTO LAMA JIKA ADA (MODE EDIT) */}
+                {isEdit && capster?.photo && (
+                    <div className="mt-2 mb-3">
+                        <p className="mb-2 text-sm text-muted-foreground">
+                            Current Photo:
+                        </p>
+                        <img
+                            src={`/storage/${capster.photo}`} // Sesuaikan path ini jika penyimpanan path fotomu berbeda
+                            alt="Current Capster Photo"
+                            className="h-32 w-32 rounded-md border border-gray-200 object-cover"
+                        />
+                    </div>
+                )}
+
                 <Input
                     id="photo"
                     type="file"
@@ -60,15 +75,14 @@ export default function CapsterForm({ capster }: CapsterFormProps) {
                     }}
                     className="mt-1 text-muted-foreground file:text-muted-foreground"
                 />
+                <p className="mt-1 text-xs text-muted-foreground">
+                    {isEdit
+                        ? 'Biarkan kosong jika tidak ingin mengubah foto.'
+                        : 'Upload foto untuk service ini.'}
+                </p>
                 <InputError message={errors.photo} className="mt-2" />
-
-                {/* Opsional: Tampilkan teks jika sedang mode edit dan belum mau ganti foto */}
-                {isEdit && !data.photo && capster.photo && (
-                    <p className="mt-2 text-xs text-muted-foreground">
-                        Biarkan kosong jika tidak ingin mengubah foto.
-                    </p>
-                )}
             </div>
+
             <div className="mb-4">
                 <Label htmlFor="name">Name</Label>
                 <Input

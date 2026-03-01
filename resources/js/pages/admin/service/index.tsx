@@ -1,8 +1,7 @@
 import { Link, router } from '@inertiajs/react';
-import { useState, useEffect } from 'react';
+import { showConfirm } from '@/alert';
 import SearchBar from '@/components/search-bar';
 import AppSidebarLayout from '@/layouts/app/app-sidebar-layout';
-import { showConfirm } from '@/alert';
 
 interface Service {
     id: number;
@@ -10,6 +9,7 @@ interface Service {
     description: string;
     duration: number;
     status: string;
+    photo: string;
 }
 
 export default function ServiceIndex({
@@ -80,6 +80,9 @@ export default function ServiceIndex({
                                 <th className="border-b px-4 py-3 font-medium">
                                     Durasi
                                 </th>
+                                <th className="border-b px-4 py-3 font-medium">
+                                    Photo
+                                </th>
                                 <th className="border-b px-4 py-3 text-center font-medium">
                                     Aksi
                                 </th>
@@ -104,6 +107,13 @@ export default function ServiceIndex({
                                         </td>
                                         <td className="px-4 py-3 text-muted-foreground">
                                             {service.duration} Menit
+                                        </td>
+                                        <td>
+                                            <img
+                                                src={`/storage/${service.photo}`}
+                                                alt={service.name}
+                                                className="h-10 w-10 rounded-full object-cover"
+                                            />
                                         </td>
                                         <td className="px-4 py-3 text-center">
                                             <button

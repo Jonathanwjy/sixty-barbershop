@@ -26,7 +26,7 @@ export default function CapsterIndex({
 
         // Tampilkan SweetAlert konfirmasi
         const isConfirmed = await showConfirm(
-            'Ubah Status Service?',
+            'Ubah Status Capster?',
             `Apakah Anda yakin ingin ${actionText} capster ini?`,
             'Ya, Ubah Status!',
         );

@@ -1,5 +1,6 @@
 import { Link, router } from '@inertiajs/react';
 import { motion } from 'framer-motion';
+import { Facebook, Instagram, MapPin, Phone, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import HeroSection from '@/components/user/banner-carousel';
 import CapsterCard from '@/components/user/capster-card';
@@ -172,6 +173,7 @@ export default function Home({
                                     <CapsterCard
                                         name={capster.name}
                                         photo={capster.photo}
+                                        nickname={capster.nickname}
                                         description={capster.description}
                                     />
                                 </motion.div>
@@ -181,25 +183,83 @@ export default function Home({
                 </motion.section>
 
                 {/* Contact Us Section */}
-                <motion.section
-                    className="contact-us w-full bg-primary px-12 py-12 text-primary-foreground md:px-32"
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true }}
-                    variants={fadeUpVariant}
-                >
-                    <div className="flex justify-between">
-                        <div>
-                            <h1 className="mb-4 text-start text-4xl font-bold underline">
-                                Unit Sixty Barbershop
-                            </h1>
-                            <p>Jl. Borang no. 123, Jakarta</p>
+                <footer className="bg-primary text-primary-foreground">
+                    <div className="mx-auto max-w-7xl px-8 py-16">
+                        <div className="grid gap-12 md:grid-cols-3">
+                            {/* Brand Section */}
+                            <div>
+                                <h2 className="mb-4 text-2xl font-bold underline">
+                                    Unit Sixty Barbershop
+                                </h2>
+                                <p className="mb-4 text-sm opacity-80">
+                                    Keluar langsung ganteng? Langsung saja ke
+                                    Sixty Barbershop
+                                </p>
+                                <div className="flex gap-4">
+                                    <a
+                                        href="#"
+                                        className="hover:text-secondary"
+                                    >
+                                        <Instagram size={20} />
+                                    </a>
+                                    <a
+                                        href="#"
+                                        className="hover:text-secondary"
+                                    >
+                                        <Facebook size={20} />
+                                    </a>
+                                    <a href="">
+                                        <Mail size={20}></Mail>
+                                    </a>
+                                </div>
+                            </div>
+
+                            {/* Contact Info */}
+                            <div>
+                                <h3 className="mb-4 text-lg font-semibold">
+                                    Kontak Kami
+                                </h3>
+                                <ul className="space-y-3 text-sm opacity-80">
+                                    <li className="flex items-center gap-2">
+                                        <MapPin size={16} />
+                                        Jl. Borang No. 123, Jakarta
+                                    </li>
+                                    <li className="flex items-center gap-2">
+                                        <Phone size={16} />
+                                        +62 812-3456-7890
+                                    </li>
+                                    <li className="flex items-center gap-2">
+                                        <Mail size={16} />
+                                        info@unitsixty.com
+                                    </li>
+                                </ul>
+                            </div>
+
+                            {/* Opening Hours */}
+                            <div>
+                                <h3 className="mb-4 text-lg font-semibold">
+                                    Jam Operasional
+                                </h3>
+                                <ul className="space-y-2 text-sm opacity-80">
+                                    <li>Senin - Jumat : 10.00 - 20.00</li>
+                                    <li>Sabtu : 10.00 - 22.00</li>
+                                </ul>
+                            </div>
                         </div>
-                        <div>
-                            <h1>Kontak Kami</h1>
+
+                        {/* Divider */}
+                        <div className="my-8 h-px bg-primary-foreground/20" />
+
+                        {/* Bottom Footer */}
+                        <div className="flex flex-col items-center justify-between gap-4 text-sm opacity-70 md:flex-row">
+                            <p>
+                                ©2026 Unit Sixty Barbershop. All rights
+                                reserved.
+                            </p>
+                            <p>Designed with ✂️ by Unit Sixty Team</p>
                         </div>
                     </div>
-                </motion.section>
+                </footer>
             </AppLayout>
         </>
     );

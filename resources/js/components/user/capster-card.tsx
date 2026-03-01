@@ -3,12 +3,12 @@ import { motion } from 'framer-motion';
 export default function CapsterCard({
     name,
     photo,
-
+    nickname,
     description,
 }: {
     name: string;
     photo: string;
-
+    nickname: string;
     description: string;
 }) {
     return (
@@ -27,7 +27,10 @@ export default function CapsterCard({
             />
             <div>
                 <h2 className="mb-2 text-2xl font-bold">{name}</h2>
-                <p className="mb-4 text-sm md:text-lg">{description}</p>
+                <h4>Biasa dipanggil: {nickname}</h4>
+                <p className="mb-4 text-sm text-muted-foreground md:text-lg">
+                    {description}
+                </p>
             </div>
         </motion.div>
     );

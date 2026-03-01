@@ -1,4 +1,4 @@
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react'; // 1. Tambahkan usePage
 import { BookOpen, Folder, LayoutGrid } from 'lucide-react';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -45,6 +45,23 @@ const mainNavItems: NavItem[] = [
 ];
 
 export function AppSidebar() {
+    // 2. Ambil informasi URL saat ini dari Inertia
+    const { url } = usePage();
+
+    // 3. Petakan ulang mainNavItems untuk menentukan status aktif secara dinamis
+    const activeNavItems = mainNavItems.map((item) => {
+        // Hilangkan '/index' untuk mendapatkan "Base URL" dari menu tersebut
+        // Contoh: '/admin/services/index' menjadi '/admin/services'
+        const basePath = item.href.replace('/index', '');
+
+        return {
+            ...item,
+            // Menu akan aktif jika URL browser saat ini diawali dengan basePath
+            // Jadi '/admin/services/edit/1' akan tetap membuat menu 'Services' menyala
+            isActive: url.startsWith(basePath),
+        };
+    });
+
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
@@ -60,7 +77,7 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                <NavMain items={mainNavItems} />
+                <NavMain items={activeNavItems} />
             </SidebarContent>
 
             <SidebarFooter>
