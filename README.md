@@ -36,3 +36,48 @@ barbers who are on leave or no longer working.
 💈 Control service and capser availability <br>
 🔒 Change account name or password <br>
 🖌️ Switch theme mode (Light/Dark) <br>
+
+# Get Started
+### Requirement
+- PHP 8.1
+- Composer
+- MySQL
+- Node.JS >= 16
+- NPM
+
+### Instalation
+- Install PHP dependencies
+```
+composer install
+```
+- Install frontend dependencies
+```
+npm install
+```
+- Install Tailwind
+```
+npm install tailwindcss @tailwindcss/vite
+```
+- Generate Application key
+```
+php artisan key:generate
+```
+- Database configuration
+- - Create a new database
+  - Open .env file and configure
+    ```
+    DB_DATABASE=your_database_name
+    DB_USERNAME=your_username
+    DB_PASSWORD=your_password
+    ```
+  - Run migration:
+    ```
+    php artisan migrate
+    ```
+
+- Storage configuration
+```
+php artisan storage:link
+```
+
+
