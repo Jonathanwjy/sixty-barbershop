@@ -79,5 +79,7 @@ php artisan key:generate
 ```
 php artisan storage:link
 ```
-
+# Contribution
+Feel free to report bugs or suggesting new features into the app.
+Thank you for helping me to improve Sixty Barbershop 🔥
 
