@@ -13,6 +13,13 @@ On the admin panel, administrators can monitor booking schedules and manage serv
 for each service and capster combination. Administrators can also disable services that are temporarily unavailable or deactivate
 capsters who are on leave or no longer working.
 
+# Technologies
+- Inertia.JS
+- Tailwind
+- Filament
+- Midtrans
+- MySQL
+
 # Features
 🔒Authentication and Authorization <br>
 🧑‍🤝‍🧑Multi User: User and Admin <br>
