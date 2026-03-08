@@ -7,8 +7,6 @@ export default function Edit({ service }: { service: any }) {
         <AppSidebarLayout>
             <div className="w-full p-4">
                 <h1 className="mb-4 text-2xl font-bold">Edit Service</h1>
-
-                {/* Panggil form DENGAN props service (Mode Edit) */}
                 <ServiceForm service={service} />
             </div>
         </AppSidebarLayout>

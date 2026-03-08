@@ -20,24 +20,21 @@ export default function ServiceIndex({
     filters: { search: string };
 }) {
     const handleToggleStatus = async (id: number, currentStatus: string) => {
-        // Tentukan teks dinamis berdasarkan status saat ini
         const actionText =
             currentStatus === 'active' ? 'menonaktifkan' : 'aktifkan';
 
-        // Tampilkan SweetAlert konfirmasi
         const isConfirmed = await showConfirm(
             'Ubah Status Service?',
             `Apakah Anda yakin ingin ${actionText} service ini?`,
             'Ya, Ubah Status!',
         );
 
-        // Jika user klik "Ya", jalankan request ke backend
         if (isConfirmed) {
             router.patch(
                 `/admin/services/toggle-status/${id}`,
                 {},
                 {
-                    preserveScroll: true, // Agar halaman tidak loncat ke atas saat diklik
+                    preserveScroll: true,
                 },
             );
         }
@@ -46,7 +43,6 @@ export default function ServiceIndex({
     return (
         <AppSidebarLayout>
             <div className="flex flex-col gap-6 p-6">
-                {/* Header Section */}
                 <div className="flex items-center justify-between">
                     <h1 className="text-2xl font-bold">Service Management</h1>
 
@@ -63,7 +59,6 @@ export default function ServiceIndex({
                     </Link>
                 </div>
 
-                {/* Table Section */}
                 <div className="w-full overflow-hidden rounded-md border border-border bg-background shadow-sm">
                     <table className="w-full text-left text-sm">
                         <thead className="bg-muted text-muted-foreground">
@@ -89,7 +84,6 @@ export default function ServiceIndex({
                             </tr>
                         </thead>
                         <tbody>
-                            {/* 2. Map data services ke dalam baris tabel */}
                             {services.length > 0 ? (
                                 services.map((service, index) => (
                                     <tr
@@ -143,13 +137,11 @@ export default function ServiceIndex({
                                     </tr>
                                 ))
                             ) : (
-                                /* Jika data kosong */
                                 <tr>
                                     <td
-                                        colSpan={5} // <-- Sesuaikan dengan jumlah kolom (No, Nama, Deskripsi, Durasi, Aksi = 5)
+                                        colSpan={5}
                                         className="px-4 py-8 text-center text-muted-foreground"
                                     >
-                                        {/* Ubah pesan kosong karena searchTerm sudah tidak ada di scope ini */}
                                         {filters?.search
                                             ? `Service dengan nama "${filters.search}" tidak ditemukan.`
                                             : 'Belum ada data service yang ditambahkan.'}

@@ -5,7 +5,7 @@ import {
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from '@/components/ui/select'; // Tambahkan import Select
+} from '@/components/ui/select'; 
 import type { Booking } from '@/components/user/booking-card';
 import BookingCard from '@/components/user/booking-card';
 import AppLayout from '@/layouts/app-layout';
@@ -18,14 +18,13 @@ interface Props {
     canceledBook: Booking[];
 }
 
-// --- KOMPONEN UTAMA ---
+
 export default function BookingHistory({
     unpaidBook = [],
     ongoingBook = [],
     finishedBook = [],
     canceledBook = [],
 }: Props) {
-    // State untuk mengontrol tab mana yang sedang aktif
     const [activeTab, setActiveTab] = useState('unpaid');
 
     return (
@@ -42,13 +41,11 @@ export default function BookingHistory({
                     </div>
 
                     <div className="px-6 md:px-12">
-                        {/* Tambahkan value dan onValueChange ke komponen Tabs */}
                         <Tabs
                             value={activeTab}
                             onValueChange={setActiveTab}
                             className="w-full"
                         >
-                            {/* --- TAMPILAN MOBILE: DROPDOWN MENU --- */}
                             <div className="mb-8 block md:hidden">
                                 <Select
                                     value={activeTab}
@@ -74,8 +71,6 @@ export default function BookingHistory({
                                 </Select>
                             </div>
 
-                            {/* --- TAMPILAN DESKTOP: TABS PILL/KAPSUL --- */}
-                            {/* Tambahkan 'hidden md:flex' agar tidak muncul di HP */}
                             <TabsList className="mb-8 hidden h-auto w-full items-center justify-between gap-1 rounded-full border border-primary bg-accent p-5 shadow-2xl md:flex">
                                 <TabsTrigger
                                     value="unpaid"
@@ -106,7 +101,6 @@ export default function BookingHistory({
                                 </TabsTrigger>
                             </TabsList>
 
-                            {/* KONTEN TAB: BELUM BAYAR */}
                             <TabsContent value="unpaid">
                                 {unpaidBook.length === 0 ? (
                                     <div className="rounded-lg border bg-accent/50 py-10 text-center text-muted-foreground">
@@ -125,7 +119,6 @@ export default function BookingHistory({
                                 )}
                             </TabsContent>
 
-                            {/* KONTEN TAB: BERJALAN */}
                             <TabsContent value="ongoing">
                                 {ongoingBook.length === 0 ? (
                                     <div className="rounded-lg border bg-accent/50 py-10 text-center text-muted-foreground">
@@ -144,7 +137,6 @@ export default function BookingHistory({
                                 )}
                             </TabsContent>
 
-                            {/* KONTEN TAB: SELESAI */}
                             <TabsContent value="finished">
                                 {finishedBook.length === 0 ? (
                                     <div className="rounded-lg border bg-accent/50 py-10 text-center text-muted-foreground">
@@ -163,7 +155,6 @@ export default function BookingHistory({
                                 )}
                             </TabsContent>
 
-                            {/* KONTEN TAB: DIBATALKAN */}
                             <TabsContent value="canceled">
                                 {canceledBook.length === 0 ? (
                                     <div className="rounded-lg border bg-accent/50 py-10 text-center text-muted-foreground">

@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import CancelBookingButton from '@/components/user/cancel-booking-button';
 import AppLayout from '@/layouts/app-layout';
 
-// Definisikan tipe data agar TypeScript tidak error
 interface Booking {
     id: number;
     snap_token: string;
@@ -28,9 +27,7 @@ export default function BookingCheckout({
     midtransClientKey,
     isProduction,
 }: Props) {
-    // 1. Memuat Script Midtrans saat komponen pertama kali dirender
     useEffect(() => {
-        // Tentukan URL script berdasarkan environment (Sandbox / Production)
         const scriptUrl = isProduction
             ? 'https://app.midtrans.com/snap/snap.js'
             : 'https://app.sandbox.midtrans.com/snap/snap.js';
@@ -47,7 +44,6 @@ export default function BookingCheckout({
         };
     }, [midtransClientKey, isProduction]);
 
-    // 2. Format Harga ke Rupiah
     const formatRupiah = (angka: number) => {
         return new Intl.NumberFormat('id-ID', {
             style: 'currency',
@@ -56,34 +52,27 @@ export default function BookingCheckout({
         }).format(angka);
     };
 
-    // 3. Fungsi untuk memanggil Popup Midtrans
     const handlePay = () => {
-        // Gunakan (window as any) agar TypeScript tidak protes karena object 'snap' tidak dikenali secara default
         const snap = (window as any).snap;
 
         if (snap && booking.snap_token) {
             snap.pay(booking.snap_token, {
-                // Callback jika pembayaran sukses
                 onSuccess: function (result: any) {
                     console.log('Success:', result);
-                    // Arahkan kembali ke dashboard atau halaman sukses
                     router.visit('/', {
                         onSuccess: () => alert('Pembayaran berhasil!'),
                     });
                 },
-                // Callback jika pembayaran tertunda (misal pilih transfer bank/minimarket)
                 onPending: function (result: any) {
                     console.log('Pending:', result);
                     router.visit('/', {
                         onSuccess: () => alert('Menunggu pembayaran Anda.'),
                     });
                 },
-                // Callback jika pembayaran gagal
                 onError: function (result: any) {
                     console.log('Error:', result);
                     alert('Pembayaran gagal, silakan coba lagi.');
                 },
-                // Callback jika user menutup popup tanpa menyelesaikan pembayaran
                 onClose: function () {
                     console.log(
                         'Customer closed the popup without finishing the payment',
@@ -98,8 +87,6 @@ export default function BookingCheckout({
         }
     };
 
-    // Tambahkan fungsi ini di atas return()
-
     return (
         <AppLayout>
             <div className="mx-auto mt-12 mb-12 flex w-11/12 flex-col rounded-lg border border-gray-300 p-6 shadow-sm md:w-1/2 lg:w-1/3">
@@ -113,7 +100,6 @@ export default function BookingCheckout({
                 </div>
 
                 <div className="flex flex-col gap-4">
-                    {/* INFO BOOKING */}
                     <div className="rounded-md border border-accent bg-accent/30 p-4">
                         <ul className="space-y-2 text-sm">
                             <li className="flex justify-between border-b pb-2">
@@ -160,7 +146,6 @@ export default function BookingCheckout({
                         </ul>
                     </div>
 
-                    {/* TOMBOL BAYAR */}
                     <Button
                         onClick={handlePay}
                         className="text-md mt-4 h-12 w-full cursor-pointer font-bold"

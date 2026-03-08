@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
-// Definisikan tipe data Service
 interface Service {
     id: number;
     name: string;
@@ -36,14 +35,12 @@ export default function ServiceForm({ service }: ServiceFormProps) {
         if (isEdit) {
             post(`/admin/services/update/${service.id}`);
         } else {
-            // Mode Create: Gunakan POST ke URL store
             post('/admin/services/store');
         }
     };
 
     return (
         <form onSubmit={submit} className="h-auto max-w-xl">
-            {/* NAME INPUT */}
             <div className="mb-4">
                 <Label htmlFor="name">Name</Label>
                 <Input
@@ -57,18 +54,16 @@ export default function ServiceForm({ service }: ServiceFormProps) {
                 <InputError message={errors.name} className="mt-2" />
             </div>
 
-            {/* PHOTO INPUT */}
             <div className="mb-4">
                 <Label htmlFor="photo">Photo</Label>
 
-                {/* TAMPILKAN FOTO LAMA JIKA ADA (MODE EDIT) */}
                 {isEdit && service?.photo && (
                     <div className="mt-2 mb-3">
                         <p className="mb-2 text-sm text-muted-foreground">
                             Current Photo:
                         </p>
                         <img
-                            src={`/storage/${service.photo}`} // Sesuaikan path ini jika penyimpanan path fotomu berbeda
+                            src={`/storage/${service.photo}`}
                             alt="Current Service Photo"
                             className="h-32 w-32 rounded-md border border-gray-200 object-cover"
                         />
@@ -78,9 +73,8 @@ export default function ServiceForm({ service }: ServiceFormProps) {
                 <Input
                     id="photo"
                     type="file"
-                    accept="image/*" // Hanya izinkan file gambar
+                    accept="image/*"
                     onChange={(e) => {
-                        // Ambil file pertama yang dipilih user
                         setData(
                             'photo',
                             e.target.files ? e.target.files[0] : null,
@@ -96,7 +90,6 @@ export default function ServiceForm({ service }: ServiceFormProps) {
                 <InputError message={errors.photo} className="mt-2" />
             </div>
 
-            {/* DESCRIPTION INPUT */}
             <div className="mb-4">
                 <Label htmlFor="description">Description</Label>
                 <Input
@@ -110,7 +103,6 @@ export default function ServiceForm({ service }: ServiceFormProps) {
                 <InputError message={errors.description} className="mt-2" />
             </div>
 
-            {/* DURATION INPUT */}
             <div className="mb-4">
                 <Label htmlFor="duration">Duration</Label>
                 <Input
@@ -124,7 +116,6 @@ export default function ServiceForm({ service }: ServiceFormProps) {
                 <InputError message={errors.duration} className="mt-2" />
             </div>
 
-            {/* BUTTON */}
             <Button type="submit" className="w-full" disabled={processing}>
                 {processing
                     ? 'Saving...'
