@@ -1,6 +1,6 @@
-import * as React from 'react';
 import { Link } from '@inertiajs/react';
 import Autoplay from 'embla-carousel-autoplay';
+import * as React from 'react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -17,7 +17,6 @@ const heroImages = [
 ];
 
 export default function HeroSection() {
-    // Konfigurasi Plugin Autoplay
     const plugin = React.useRef(
         Autoplay({
             delay: 4000,
@@ -53,7 +52,6 @@ export default function HeroSection() {
             </Carousel>
 
             <div className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-4 px-4 text-center">
-                {/* Opsional: Tambahkan Headline agar lebih menarik */}
                 <h1 className="text-2xl font-bold text-white drop-shadow-lg md:text-5xl">
                     Premium Cuts, Classic Vibes.
                 </h1>
@@ -61,7 +59,6 @@ export default function HeroSection() {
                     Pengalaman cukur rambut yang belum anda rasakan sebelumnya.
                 </p>
 
-                {/* Tombol Book Now */}
                 <Link href="/bookings/create">
                     <Button className="px-8 py-6 text-lg font-bold shadow-xl transition-transform hover:scale-105">
                         BOOK NOW

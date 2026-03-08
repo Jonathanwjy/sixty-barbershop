@@ -15,7 +15,6 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 
-// Definisikan tipe data Service
 interface Pricing {
     id: number;
     service_id: number;
@@ -58,14 +57,12 @@ export default function PricingForm({
         if (isEdit) {
             put(`/admin/pricings/update/${pricing.id}`);
         } else {
-            // Mode Create: Gunakan POST ke URL store
             post('/admin/pricings/store');
         }
     };
 
     return (
         <form onSubmit={submit} className="h-auto max-w-xl">
-            {/* NAME INPUT */}
             <div className="mb-4">
                 <Label htmlFor="service">Service</Label>
                 <Select
@@ -93,7 +90,6 @@ export default function PricingForm({
                 <InputError message={errors.service_id} className="mt-2" />
             </div>
 
-            {/* DESCRIPTION INPUT */}
             <div className="mb-4">
                 <Label htmlFor="Capster">Capster</Label>
                 <Select
@@ -134,7 +130,6 @@ export default function PricingForm({
                 <InputError message={errors.price} className="mt-2" />
             </div>
 
-            {/* BUTTON */}
             <Button type="submit" className="w-full" disabled={processing}>
                 {processing
                     ? 'Saving...'

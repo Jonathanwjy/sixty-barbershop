@@ -14,10 +14,8 @@ import Logout from '@/components/ui/logout';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
 export default function Navbar() {
-    // Mengambil data user dari global props
     const { auth } = usePage().props as any;
 
-    // State untuk mengontrol buka/tutup menu mobile secara manual
     const [isOpen, setIsOpen] = useState(false);
 
     const navLinks = [
@@ -30,7 +28,6 @@ export default function Navbar() {
     return (
         <nav className="sticky top-0 z-50 w-full border-b bg-sidebar-primary text-sidebar-primary-foreground backdrop-blur">
             <div className="container mx-auto flex h-12 items-center justify-between px-4 md:h-20">
-                {/* --- 1. LOGO (KIRI) --- */}
                 <div className="flex items-center gap-2">
                     <Link href="/" className="flex items-center space-x-2">
                         <div className="h-6 w-6 rounded-md bg-primary" />
@@ -40,10 +37,7 @@ export default function Navbar() {
                     </Link>
                 </div>
 
-                {/* --- 2. DESKTOP MENU (TENGAH & KANAN) --- */}
-                {/* Hidden di mobile, muncul di md */}
                 <div className="hidden items-center gap-6 md:flex">
-                    {/* Links */}
                     {navLinks.map((link) => (
                         <Link
                             key={link.name}
@@ -54,7 +48,6 @@ export default function Navbar() {
                         </Link>
                     ))}
 
-                    {/* Auth Buttons Desktop */}
                     <div className="ml-4 flex items-center gap-4">
                         {auth.user ? (
                             <>
@@ -116,8 +109,6 @@ export default function Navbar() {
                     </div>
                 </div>
 
-                {/* --- 3. MOBILE MENU (HAMBURGER) --- */}
-                {/* Muncul di mobile, hidden di md */}
                 <div className="md:hidden">
                     <Sheet open={isOpen} onOpenChange={setIsOpen}>
                         <SheetTrigger asChild>
@@ -131,19 +122,17 @@ export default function Navbar() {
                             </Button>
                         </SheetTrigger>
 
-                        {/* Isi Menu Mobile (Slide dari Kanan) */}
                         <SheetContent
                             side="right"
                             className="bg-sidebar-primary text-sidebar-foreground"
                         >
                             <div className="mt-8 flex flex-col gap-6 pl-4">
-                                {/* Mobile Links */}
                                 <div className="flex flex-col gap-4">
                                     {navLinks.map((link) => (
                                         <Link
                                             key={link.name}
                                             href={link.href}
-                                            onClick={() => setIsOpen(false)} // Tutup menu saat link diklik
+                                            onClick={() => setIsOpen(false)}
                                             className="text-md rounded-md p-2 font-medium transition-colors hover:bg-accent-foreground hover:text-accent"
                                         >
                                             {link.name}
@@ -151,30 +140,28 @@ export default function Navbar() {
                                     ))}
                                 </div>
 
-                                {/* Garis Pemisah */}
                                 <div className="h-[1px] w-full bg-border" />
 
-                                {/* Mobile Auth Buttons */}
                                 <div className="flex flex-col gap-3">
                                     {auth.user ? (
                                         <>
                                             <Link
                                                 href="/settings"
-                                                onClick={() => setIsOpen(false)} // Tutup menu saat link diklik
+                                                onClick={() => setIsOpen(false)}
                                                 className="text-md rounded-md p-2 font-medium transition-colors hover:bg-accent-foreground hover:text-accent"
                                             >
                                                 Profile
                                             </Link>
                                             <Link
                                                 href="/bookings/create"
-                                                onClick={() => setIsOpen(false)} // Tutup menu saat link diklik
+                                                onClick={() => setIsOpen(false)}
                                                 className="text-md rounded-md p-2 font-medium transition-colors hover:bg-accent-foreground hover:text-accent"
                                             >
                                                 Booking
                                             </Link>
                                             <Link
                                                 href="/bookings/history"
-                                                onClick={() => setIsOpen(false)} // Tutup menu saat link diklik
+                                                onClick={() => setIsOpen(false)}
                                                 className="text-md rounded-md p-2 font-medium transition-colors hover:bg-accent-foreground hover:text-accent"
                                             >
                                                 History

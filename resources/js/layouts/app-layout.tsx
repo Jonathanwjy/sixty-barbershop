@@ -13,9 +13,9 @@ export default function AppLayout({ children }: PropsWithChildren) {
             const previous = scrollY.getPrevious();
 
             if (latest > previous && latest > 100) {
-                setHidden(true); // scroll ke bawah
+                setHidden(true);
             } else {
-                setHidden(false); // scroll ke atas
+                setHidden(false);
             }
         });
     }, [scrollY]);

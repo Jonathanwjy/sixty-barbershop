@@ -124,7 +124,6 @@ export default function BookingIndex({ bookings = [], filters }: Props) {
         }
     };
 
-    // --- HELPER WARNA BADGE ---
     const getPaymentBadge = (status: string) => {
         switch (status) {
             case 'paid':
@@ -150,7 +149,6 @@ export default function BookingIndex({ bookings = [], filters }: Props) {
         }
     };
 
-    // Helper untuk format tanggal
     const formatDate = (dateString: string) => {
         const options: Intl.DateTimeFormatOptions = {
             weekday: 'long',
@@ -164,7 +162,6 @@ export default function BookingIndex({ bookings = [], filters }: Props) {
     return (
         <AppSidebarLayout>
             <div className="flex flex-col gap-6 p-6">
-                {/* --- HEADER & FILTER SECTION --- */}
                 <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
                     <div>
                         <h1 className="text-2xl font-bold">
@@ -180,7 +177,6 @@ export default function BookingIndex({ bookings = [], filters }: Props) {
 
                     <div className="flex flex-col gap-3">
                         <div className="flex flex-wrap items-center gap-3">
-                            {/* Filter Tanggal */}
                             <div className="flex items-center gap-2">
                                 <label
                                     htmlFor="date-filter"
@@ -202,7 +198,6 @@ export default function BookingIndex({ bookings = [], filters }: Props) {
                                 />
                             </div>
 
-                            {/* Filter Status Pembayaran */}
                             <select
                                 value={filters.payment_status || ''}
                                 onChange={(e) =>
@@ -221,7 +216,6 @@ export default function BookingIndex({ bookings = [], filters }: Props) {
                                 <option value="failed">Failed</option>
                             </select>
 
-                            {/* Filter Status Booking */}
                             <select
                                 value={filters.booking_status || ''}
                                 onChange={(e) =>
@@ -240,7 +234,6 @@ export default function BookingIndex({ bookings = [], filters }: Props) {
                             </select>
                         </div>
 
-                        {/* Search Bar */}
                         <div className="w-full self-end sm:w-80">
                             <SearchBar
                                 routeUrl={getSearchUrl()}
@@ -251,7 +244,6 @@ export default function BookingIndex({ bookings = [], filters }: Props) {
                     </div>
                 </div>
 
-                {/* --- TABLE SECTION --- */}
                 <div className="w-full overflow-hidden rounded-md border border-border bg-background shadow-sm">
                     <table className="w-full text-left text-sm">
                         <thead className="bg-muted text-muted-foreground">
@@ -283,7 +275,6 @@ export default function BookingIndex({ bookings = [], filters }: Props) {
                             {bookings.length > 0 ? (
                                 bookings.map((booking, index) => (
                                     <React.Fragment key={booking.id}>
-                                        {/* BARIS UTAMA */}
                                         <tr
                                             onClick={() =>
                                                 toggleRow(booking.id)
@@ -341,7 +332,6 @@ export default function BookingIndex({ bookings = [], filters }: Props) {
                                             </td>
                                         </tr>
 
-                                        {/* BARIS DETAIL */}
                                         {expandedId === booking.id && (
                                             <tr className="border-b bg-muted/10">
                                                 <td
@@ -375,7 +365,6 @@ export default function BookingIndex({ bookings = [], filters }: Props) {
                                                             )}
                                                         </div>
 
-                                                        {/* Kolom Info Layanan */}
                                                         <div>
                                                             <h4 className="mb-2 text-sm font-semibold">
                                                                 Layanan
@@ -398,7 +387,6 @@ export default function BookingIndex({ bookings = [], filters }: Props) {
                                                             </p>
                                                         </div>
 
-                                                        {/* Kolom Harga & Aksi */}
                                                         <div className="flex flex-col justify-between md:items-end">
                                                             <div className="w-full text-left md:text-right">
                                                                 <h4 className="mb-1 text-sm font-semibold">
@@ -453,7 +441,6 @@ export default function BookingIndex({ bookings = [], filters }: Props) {
                                     </React.Fragment>
                                 ))
                             ) : (
-                                /* State Kosong */
                                 <tr>
                                     <td
                                         colSpan={7}

@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
-// Definisikan tipe data Service
 interface Capster {
     id: number;
     name: string;
@@ -36,26 +35,22 @@ export default function CapsterForm({ capster }: CapsterFormProps) {
         if (isEdit) {
             post(`/admin/capsters/update/${capster.id}`);
         } else {
-            // Mode Create: Gunakan POST ke URL store
             post('/admin/capsters/store');
         }
     };
 
     return (
         <form onSubmit={submit} className="h-auto max-w-xl">
-            {/* NAME INPUT */}
-
             <div className="mb-4">
                 <Label htmlFor="photo">Photo</Label>
 
-                {/* TAMPILKAN FOTO LAMA JIKA ADA (MODE EDIT) */}
                 {isEdit && capster?.photo && (
                     <div className="mt-2 mb-3">
                         <p className="mb-2 text-sm text-muted-foreground">
                             Current Photo:
                         </p>
                         <img
-                            src={`/storage/${capster.photo}`} // Sesuaikan path ini jika penyimpanan path fotomu berbeda
+                            src={`/storage/${capster.photo}`}
                             alt="Current Capster Photo"
                             className="h-32 w-32 rounded-md border border-gray-200 object-cover"
                         />
@@ -65,9 +60,8 @@ export default function CapsterForm({ capster }: CapsterFormProps) {
                 <Input
                     id="photo"
                     type="file"
-                    accept="image/*" // Hanya izinkan file gambar
+                    accept="image/*"
                     onChange={(e) => {
-                        // Ambil file pertama yang dipilih user
                         setData(
                             'photo',
                             e.target.files ? e.target.files[0] : null,
@@ -96,7 +90,6 @@ export default function CapsterForm({ capster }: CapsterFormProps) {
                 <InputError message={errors.name} className="mt-2" />
             </div>
 
-            {/* DESCRIPTION INPUT */}
             <div className="mb-4">
                 <Label htmlFor="description">Description</Label>
                 <Input
@@ -110,7 +103,6 @@ export default function CapsterForm({ capster }: CapsterFormProps) {
                 <InputError message={errors.description} className="mt-2" />
             </div>
 
-            {/* DURATION INPUT */}
             <div className="mb-4">
                 <Label htmlFor="duration">Nickname</Label>
                 <Input
@@ -124,7 +116,6 @@ export default function CapsterForm({ capster }: CapsterFormProps) {
                 <InputError message={errors.nickname} className="mt-2" />
             </div>
 
-            {/* BUTTON */}
             <Button type="submit" className="w-full" disabled={processing}>
                 {processing
                     ? 'Saving...'

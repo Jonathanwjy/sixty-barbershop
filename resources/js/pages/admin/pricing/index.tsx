@@ -1,4 +1,5 @@
 import { Link, router } from '@inertiajs/react';
+import { showConfirm } from '@/alert';
 import {
     Select,
     SelectContent,
@@ -7,7 +8,6 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import AppSidebarLayout from '@/layouts/app/app-sidebar-layout';
-import { showConfirm } from '@/alert';
 
 interface Pricing {
     id: number;
@@ -51,10 +51,10 @@ export default function PricingIndex({
         value: string,
     ) => {
         router.get(
-            '/admin/pricings/index', // <-- HAPUS /index DI SINI
+            '/admin/pricings/index',
             {
                 ...filters,
-                [key]: value, // Kirim apa adanya, biar Laravel yang filter kata "all"-nya
+                [key]: value,
             },
             {
                 preserveState: true,
@@ -65,16 +65,12 @@ export default function PricingIndex({
     };
 
     const handleDelete = async (id: number) => {
-        // Tentukan teks dinamis berdasarkan status saat ini
-
-        // Tampilkan SweetAlert konfirmasi
         const isConfirmed = await showConfirm(
             'Hapus harga service?',
             `Apakah Anda yakin ingin menghapus harga service capster ini?`,
             'Ya, hapus!',
         );
 
-        // Jika user klik "Ya", jalankan request ke backend
         if (isConfirmed) {
             router.post(
                 `/admin/pricings/delete/${id}`,
@@ -98,7 +94,6 @@ export default function PricingIndex({
         <>
             <AppSidebarLayout>
                 <div className="flex flex-col gap-6 p-6">
-                    {/* Header Section */}
                     <div className="flex items-center justify-between">
                         <h1 className="text-2xl font-bold">
                             Pricing Management
@@ -127,7 +122,6 @@ export default function PricingIndex({
                             </SelectContent>
                         </Select>
 
-                        {/* 2. FILTER CAPSTER */}
                         <Select
                             value={filters?.capster_id || 'all'}
                             onValueChange={(val) =>
@@ -163,7 +157,6 @@ export default function PricingIndex({
                         <table className="w-full text-left text-sm">
                             <thead className="bg-muted text-muted-foreground">
                                 <tr>
-                                    {/* Beri sedikit batasan lebar (w-16) agar kolom No tidak terlalu lebar */}
                                     <th className="w-16 border-b px-4 py-3 font-medium">
                                         No
                                     </th>
@@ -173,11 +166,9 @@ export default function PricingIndex({
                                     <th className="border-b px-4 py-3 font-medium">
                                         Nama Capster
                                     </th>
-                                    {/* Tambahkan text-center agar sejajar dengan tombol */}
                                     <th className="border-b px-4 py-3 font-medium">
                                         Harga
                                     </th>
-                                    {/* Pastikan ini juga text-center */}
                                     <th className="border-b px-4 py-3 text-center font-medium">
                                         Aksi
                                     </th>
@@ -204,7 +195,6 @@ export default function PricingIndex({
                                             </td>
 
                                             <td className="px-4 py-3">
-                                                {/* justify-center akan menengahkan tombol Edit & Delete */}
                                                 <div className="flex justify-center gap-3">
                                                     <Link
                                                         href={`/admin/pricings/edit/${pricing.id}`}

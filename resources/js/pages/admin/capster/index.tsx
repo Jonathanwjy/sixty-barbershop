@@ -20,24 +20,21 @@ export default function CapsterIndex({
     filters: { search: string };
 }) {
     const handleToggleStatus = async (id: number, currentStatus: string) => {
-        // Tentukan teks dinamis berdasarkan status saat ini
         const actionText =
             currentStatus === 'active' ? 'menonaktifkan' : 'mengaktifkan';
 
-        // Tampilkan SweetAlert konfirmasi
         const isConfirmed = await showConfirm(
             'Ubah Status Capster?',
             `Apakah Anda yakin ingin ${actionText} capster ini?`,
             'Ya, Ubah Status!',
         );
 
-        // Jika user klik "Ya", jalankan request ke backend
         if (isConfirmed) {
             router.patch(
                 `/admin/capsters/toggle-status/${id}`,
                 {},
                 {
-                    preserveScroll: true, // Agar halaman tidak loncat ke atas saat diklik
+                    preserveScroll: true,
                 },
             );
         }
@@ -47,7 +44,6 @@ export default function CapsterIndex({
         <>
             <AppSidebarLayout>
                 <div className="flex flex-col gap-6 p-6">
-                    {/* Header Section */}
                     <div className="flex items-center justify-between">
                         <h1 className="text-2xl font-bold">
                             Capster Management
@@ -71,7 +67,6 @@ export default function CapsterIndex({
                         <table className="w-full text-left text-sm">
                             <thead className="bg-muted text-muted-foreground">
                                 <tr>
-                                    {/* Beri sedikit batasan lebar (w-16) agar kolom No tidak terlalu lebar */}
                                     <th className="w-16 border-b px-4 py-3 font-medium">
                                         No
                                     </th>
@@ -115,7 +110,6 @@ export default function CapsterIndex({
                                                 />
                                             </td>
 
-                                            {/* Ini sudah benar text-center, sekarang sejajar dengan headernya */}
                                             <td className="px-4 py-3 text-center">
                                                 <button
                                                     onClick={() =>
@@ -147,10 +141,9 @@ export default function CapsterIndex({
                                 ) : (
                                     <tr>
                                         <td
-                                            colSpan={5} // <-- Sesuaikan dengan jumlah kolom (No, Nama, Deskripsi, Durasi, Aksi = 5)
+                                            colSpan={5}
                                             className="px-4 py-8 text-center text-muted-foreground"
                                         >
-                                            {/* Ubah pesan kosong karena searchTerm sudah tidak ada di scope ini */}
                                             {filters?.search
                                                 ? `Capster dengan nama "${filters.search}" tidak ditemukan.`
                                                 : 'Belum ada data capster yang ditambahkan.'}
