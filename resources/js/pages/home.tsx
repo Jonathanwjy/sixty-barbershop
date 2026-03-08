@@ -41,17 +41,19 @@ export default function Home({
         },
     };
 
-    const { scrollY } = useScroll();
+    const { scrollYProgress } = useScroll();
 
-    const aboutY = useTransform(scrollY, [0, 800], [100, 0]);
-    const heroY = useTransform(scrollY, [0, 800], [0, -150]);
-
+    const filter = useTransform(
+        scrollYProgress,
+        [0, 1],
+        ['blur(0px)', 'blur(60px)'],
+    );
     return (
         <>
             <AppLayout>
                 <motion.section
                     className="hero h-screen overflow-hidden"
-                    style={{ y: heroY }}
+                    style={{ filter }}
                 >
                     <HeroSection />
                 </motion.section>
