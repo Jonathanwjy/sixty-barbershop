@@ -38,7 +38,7 @@ export default function HeroSection() {
                 <CarouselContent>
                     {heroImages.map((src, index) => (
                         <CarouselItem key={index}>
-                            <div className="md: relative h-[40vh] w-full overflow-hidden object-fill md:aspect-[16/9] md:h-[89vh]">
+                            <div className="relative h-[80vh] w-full overflow-hidden md:h-screen">
                                 <img
                                     src={src}
                                     alt={`Barbershop Atmosphere ${index + 1}`}

@@ -13,7 +13,7 @@ export default function CapsterCard({
 }) {
     return (
         <motion.div
-            className="capster-card bg-background-foreground flex rounded-lg border p-4 shadow-lg"
+            className="capster-card bg-background-foreground flex flex-col rounded-lg border shadow-lg"
             whileHover={{
                 scale: 1.05,
                 backgroundColor: 'var(--accent)',
@@ -23,9 +23,9 @@ export default function CapsterCard({
             <img
                 src={`/storage/${photo}`}
                 alt={`${name}'s photo`}
-                className="mr-4 mb-4 aspect-square w-[128px] object-cover object-center md:w-[350px]"
+                className="mr-4 mb-4 aspect-square w-full object-cover object-center md:w-full"
             />
-            <div>
+            <div className="px-4">
                 <h2 className="mb-2 text-2xl font-bold">{name}</h2>
                 <h4>Biasa dipanggil: {nickname}</h4>
                 <p className="mb-4 text-sm text-muted-foreground md:text-lg">
