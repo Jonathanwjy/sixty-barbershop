@@ -37,12 +37,12 @@ export default function BookingForm({
     capsters,
     services,
     pricings,
-    bookedTimes = [], // Default kosong jika belum ada data
+    bookedTimes = [],
 }: {
     services: Service[];
     capsters: Capster[];
     pricings: Pricing[];
-    bookedTimes?: string[]; // Prop baru untuk jam yang sudah di-booking
+    bookedTimes?: string[];
 }) {
     const { data, setData, post, processing, errors } = useForm({
         service_id: '',
@@ -51,7 +51,6 @@ export default function BookingForm({
         start_time: '',
     });
 
-    // Fungsi untuk men-generate jam dari 10:00 hingga 20:00 dengan interval 30 menit
     const generateTimeSlots = () => {
         const slots = [];
         for (let hour = 10; hour <= 20; hour++) {
@@ -67,11 +66,10 @@ export default function BookingForm({
 
     const timeSlots = generateTimeSlots();
 
-    // Opsional: Reload data jadwal yang dibooking saat tanggal atau capster berubah
     useEffect(() => {
         if (data.date && data.capster_id) {
             router.reload({
-                only: ['bookedTimes'], // Hanya ambil data bookedTimes dari backend
+                only: ['bookedTimes'],
                 data: {
                     date: data.date,
                     capster_id: data.capster_id,
@@ -88,7 +86,6 @@ export default function BookingForm({
             p.capster_id === Number(data.capster_id),
     );
 
-    // 4. Format harga ke Rupiah (opsional tapi disarankan)
     const formatRupiah = (angka: number) => {
         return new Intl.NumberFormat('id-ID', {
             style: 'currency',
@@ -109,14 +106,12 @@ export default function BookingForm({
     const submit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Tampilkan konfirmasi dengan detail booking
         const isConfirmed = await showConfirm(
             'Konfirmasi Booking',
             `Apakah Anda yakin ingin melakukan booking pada ${formatDate(data.date)} jam ${data.start_time}? Jam dan tanggal booking tidak dapat diubah!!`,
             'Ya, Booking Sekarang!',
         );
 
-        // Jika ditekan Ya, maka post data ke backend
         if (isConfirmed) {
             post('/bookings/store');
         }
@@ -124,7 +119,7 @@ export default function BookingForm({
 
     return (
         <AppLayout>
-            <div className="mx-auto mt-12 mb-12 flex w-11/12 flex-col rounded-lg border border-gray-300 p-6 shadow-sm md:w-3/4 lg:w-1/2">
+            <div className="mx-auto mt-28 mb-12 flex w-11/12 flex-col rounded-lg border border-gray-300 p-6 shadow-sm md:w-3/4 lg:w-1/2">
                 <div className="mb-6 text-center">
                     <h1 className="text-2xl font-bold">Booking Form</h1>
                     <p className="mt-1 text-sm text-muted-foreground md:text-base">
@@ -134,7 +129,6 @@ export default function BookingForm({
 
                 <form onSubmit={submit} className="flex flex-col gap-6">
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                        {/* SERVICE DROPDOWN */}
                         <div>
                             <Label htmlFor="service">Service</Label>
                             <Select
@@ -166,7 +160,6 @@ export default function BookingForm({
                             />
                         </div>
 
-                        {/* CAPSTER DROPDOWN */}
                         <div>
                             <Label htmlFor="capster">Capster</Label>
                             <Select
@@ -202,7 +195,7 @@ export default function BookingForm({
                     {data.service_id && data.capster_id && (
                         <div className="mt-2 rounded-md border border-accent bg-accent/50 p-4 text-center">
                             <p className="text-sm text-muted-foreground">
-                                Estimasi Harga
+                                Harga
                             </p>
                             <p className="text-xl font-bold text-primary">
                                 {selectedPricing
@@ -212,7 +205,6 @@ export default function BookingForm({
                         </div>
                     )}
 
-                    {/* DATE INPUT */}
                     <div>
                         <Label htmlFor="date">Tanggal</Label>
                         <Input
@@ -221,14 +213,13 @@ export default function BookingForm({
                             value={data.date}
                             onChange={(e) => {
                                 setData('date', e.target.value);
-                                setData('start_time', ''); // Reset jam jika tanggal diubah
+                                setData('start_time', '');
                             }}
                             className="mt-1 text-muted-foreground md:w-1/2"
                         />
                         <InputError message={errors.date} className="mt-2" />
                     </div>
 
-                    {/* BOX-BOX PEMILIHAN WAKTU */}
                     <div>
                         <Label className="mb-3 block">Jam</Label>
                         <div className="grid grid-cols-4 gap-3 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-7">
@@ -240,7 +231,7 @@ export default function BookingForm({
                                     <button
                                         key={time}
                                         type="button"
-                                        disabled={isBooked} // Disable tombol jika sudah dibooking
+                                        disabled={isBooked}
                                         onClick={() =>
                                             !isBooked &&
                                             setData('start_time', time)
@@ -264,12 +255,9 @@ export default function BookingForm({
                         />
                     </div>
 
-                    {/* SUBMIT BUTTON */}
-                    {/* SUBMIT BUTTON */}
                     <Button
                         type="submit"
-                        className="mt-4 w-full md:w-auto md:self-end"
-                        // Tambahkan !selectedPricing di sini
+                        className="mt-4 w-full cursor-pointer md:w-auto md:self-end"
                         disabled={
                             processing || !data.start_time || !selectedPricing
                         }

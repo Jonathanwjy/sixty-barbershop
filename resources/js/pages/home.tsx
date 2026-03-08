@@ -132,15 +132,15 @@ export default function Home({
                     <motion.button
                         onClick={() => router.get('/all-services')}
                         whileHover={{
-                            scale: 1.1,
-                            x: [0, -3, 3, -3, 3, 0],
-                            transition: {
-                                duration: 0.5,
-                                repeat: Infinity,
-                                repeatType: 'loop',
-                            },
+                            scale: 1.05,
+                            y: -2,
                         }}
-                        whileTap={{ scale: 0.95 }}
+                        whileTap={{ scale: 0.9, y: 1 }}
+                        transition={{
+                            type: 'spring',
+                            stiffness: 300,
+                            damping: 10,
+                        }}
                         className="hover: mx-auto mt-8 flex cursor-pointer rounded-md border border-primary bg-primary px-4 py-2 text-primary-foreground hover:bg-black hover:text-white"
                     >
                         All Services
